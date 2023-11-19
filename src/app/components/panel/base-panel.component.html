@@ -1,0 +1,7 @@
+<div class="panel unselectable" [ngClass]="{ 'collapsed': isCollapsed }">
+    <div class="title-container unselectable" (click)="toggleCollapse()">
+        <div class="title-text">{{ title }}</div>
+    </div>
+
+    <ng-content></ng-content>
+</div>

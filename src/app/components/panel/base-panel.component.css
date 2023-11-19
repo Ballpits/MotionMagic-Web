@@ -1,0 +1,34 @@
+.panel {
+  position: relative;
+  width: 275px;
+  max-height: 100vh; /* Cannot use "fit-content" here, otherwise the animation won't work. */
+  background-color: #252531;
+  border: 3px solid #4a4a68;
+  border-radius: 10px;
+  padding: 0px 10px 10px 10px;
+  overflow: hidden;
+
+  transition: max-height 0.2s;
+}
+
+.panel.collapsed {
+  max-height: 20px;
+
+  transition: max-height 0.2s;
+}
+
+.title-container {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  padding: 1px 5px 4px 5px;
+  margin: 0 auto;
+  background-color: #4a4a68;
+  border-radius: 0 0 10px 10px;
+}
+
+.title-text {
+  color: #ffffff;
+  font-size: 14px;
+  text-align: center;
+}
