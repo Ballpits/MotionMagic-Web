@@ -1,0 +1,63 @@
+/* Let each big sections have gaps */
+.panel-section-container > * {
+  margin-top: 10px;
+}
+
+/* Let each sub-sections have gaps */
+.panel-section > * {
+  margin-top: 7.5px;
+}
+
+.panel-section > :first-child {
+  margin-top: 0px;
+}
+
+.horizontal-stack-layout {
+  display: flex;
+  align-items: center; /* Optional: align items vertically in the center */
+}
+
+.horizontal-stack-layout > * {
+  margin-right: 5px;
+}
+
+/* To remove the margin from the last child, you can use :last-child selector */
+.horizontal-stack-layout > :last-child {
+  margin-right: 0;
+}
+
+.panel-section {
+  margin-top: 16px;
+}
+
+.panel-sub-section {
+  color: #ffffff;
+  text-align: left;
+  font-size: 18px;
+}
+
+.section-title-text {
+  color: #ffffff;
+  text-align: left;
+  font-size: 16px;
+}
+
+.property-text {
+  color: #ffffff;
+  text-align: center;
+  font-size: 16px;
+}
+
+.property-text-XY {
+  color: #ffffff;
+  text-align: center;
+  font-size: 16px;
+  min-width: 15px;
+}
+
+.separator {
+  width: 100%;
+  height: 5px;
+  background-color: #4a4a68;
+  border-radius: 5px;
+}
