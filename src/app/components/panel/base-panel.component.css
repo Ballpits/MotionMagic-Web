@@ -2,19 +2,21 @@
   position: relative;
   width: 275px;
   max-height: 100vh; /* Cannot use "fit-content" here, otherwise the animation won't work. */
-  background-color: #252531;
+  background-color: #2525319a;
   border: 3px solid #4a4a68;
   border-radius: 10px;
   padding: 0px 10px 10px 10px;
   overflow: hidden;
 
-  transition: max-height 0.2s;
+  backdrop-filter: blur(5px);
+
+  transition: max-height 0.2s ease-in-out;
 }
 
 .panel.collapsed {
   max-height: 20px;
 
-  transition: max-height 0.2s;
+  transition: max-height 0.2s ease-in-out;
 }
 
 .title-container {
