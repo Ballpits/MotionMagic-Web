@@ -27,7 +27,7 @@
 
 .left-column > * {
   margin-top: 10px;
-  pointer-events: inherit;
+  pointer-events: all;
 }
 
 .left-column > :first-child {
@@ -36,7 +36,7 @@
 
 .right-column > * {
   margin-top: 10px;
-  pointer-events: inherit;
+  pointer-events: all;
 }
 
 .right-column > :first-child {
