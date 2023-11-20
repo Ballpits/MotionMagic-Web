@@ -33,12 +33,16 @@ export class SimulationViewportComponent implements OnInit {
       top: 510,
     });
 
-    const triangle = new fabric.Triangle({
-      width: 600,
-      height: 270,
-      fill: '#FFFCBA',
-      left: 300,
+    const trianglePoints = [
+      { x: 0, y: 250 },
+      { x: 650, y: 250 },
+      { x: 650, y: 0 },
+    ];
+
+    const triangle = new fabric.Polygon(trianglePoints, {
+      left: 200,
       top: 400,
+      fill: '#FFFCBA',
     });
 
     this.canvas.add(triangle);
