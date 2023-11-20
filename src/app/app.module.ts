@@ -11,6 +11,7 @@ import { PropertiesPanelComponent } from './components/panel/properties-panel.co
 import { PhysicsComponent } from './components/physics/physics.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { TextboxUpDownComponent } from './components/textbox-up-down/textbox-up-down.component';
+import { SimulationViewportComponent } from './components/simulation-viewport/simulation-viewport.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { TextboxUpDownComponent } from './components/textbox-up-down/textbox-up-
     PhysicsComponent,
     DropdownComponent,
     TextboxUpDownComponent,
+    SimulationViewportComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, FormsModule],
   providers: [],
