@@ -31,12 +31,6 @@ export class SimulationViewportComponent implements OnInit {
       fill: '#368BFF',
       left: 510,
       top: 510,
-      selectable: true,
-    });
-
-    rect.set({
-      hasControls: true,
-      hasBorders: true,
     });
 
     const triangle = new fabric.Triangle({
