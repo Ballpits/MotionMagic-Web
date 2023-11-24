@@ -1,15 +1,14 @@
 .panel {
   position: relative;
   width: 275px;
-  max-height: 100vh; /* Cannot use "fit-content" here, otherwise the animation won't work. */
+  max-height: 64vh; /* Cannot use "fit-content" here, otherwise the animation won't work. */
   background-color: #252531aa;
   border: 3px solid #4a4a68;
   border-radius: 10px;
   padding: 0px 10px 10px 10px;
-  overflow: hidden;
+  overflow: auto;
 
   backdrop-filter: blur(7.5px);
-
   transition: max-height 0.2s ease-in-out;
 }
 
@@ -29,6 +28,9 @@
   border-radius: 0 0 10px 10px;
 }
 
+.bottom-panel-wrapper{
+  margin-bottom: 50px;
+}
 .title-text {
   color: #ffffff;
   font-size: 14px;
