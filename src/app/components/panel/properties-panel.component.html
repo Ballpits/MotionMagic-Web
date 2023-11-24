@@ -1,9 +1,83 @@
 <base-panel [title]="'Object Properties'">
 
-<div class="panel-section-container">
+    <div class="panel-section-container">
+        <div class="panel-section">
+            <div class="panel-sub-section">
+                <div class="section-title-text">Position</div>
+            </div>
+            
+            <div class="panel-sub-section">
+                <div class="horizontal-stack-layout">
+                    <div class="property-text-XY">X:</div>
+                    
+                    <textbox-up-down></textbox-up-down>
+                    
+                    <dropdown>
+                        <option value="cm">cm</option>
+                        <option value="m">m</option>
+                        <option value="km">km</option>
+                        <option value="inch">inch</option>
+                        <option value="mile">mile</option>
+                    </dropdown>        
+                </div>
+            </div>
+            
+            <div class="panel-sub-section">
+                <div class="horizontal-stack-layout">
+                    <div class="property-text-XY">Y:</div>
+                    
+                    <textbox-up-down></textbox-up-down>
+                    
+                    <dropdown>
+                        <option value="cm">cm</option>
+                        <option value="m">m</option>
+                        <option value="km">km</option>
+                        <option value="inch">inch</option>
+                        <option value="mile">mile</option>
+                    </dropdown>        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-section-container">
+        <div class="panel-section">
+            <div class="panel-sub-section">
+                <div class="horizontal-stack-layout">
+                    <div class="property-text">Rotation:</div>
+                    
+                    <textbox-up-down></textbox-up-down>
+                    
+                    <dropdown>
+                        <option value="deg">°</option>
+                        <option value="radient">rad</option>
+                    </dropdown>        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-section-container">
+        <div class="panel-section">
+            <div class="panel-sub-section">
+                <div class="horizontal-stack-layout">
+                    <div class="property-text">Mass:</div>
+                    
+                    <textbox-up-down></textbox-up-down>
+                    
+                    <dropdown>
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="lb">lb</option>
+                    </dropdown>        
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="panel-section">
         <div class="panel-sub-section">
-            <div class="section-title-text">Position</div>
+            <div class="section-title-text">Velocity</div>
         </div>
         
         <div class="panel-sub-section">
@@ -13,11 +87,9 @@
                 <textbox-up-down></textbox-up-down>
                 
                 <dropdown>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                    <option value="inch">inch</option>
-                    <option value="mile">mile</option>
+                    <option value="ms">m/s</option>
+                    <option value="kph">km/h</option>
+                    <option value="mph">mph</option>
                 </dropdown>        
             </div>
         </div>
@@ -29,96 +101,27 @@
                 <textbox-up-down></textbox-up-down>
                 
                 <dropdown>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                    <option value="inch">inch</option>
-                    <option value="mile">mile</option>
-                </dropdown>        
+                    <option value="ms">m/s</option>
+                    <option value="kph">km/h</option>
+                    <option value="mph">mph</option>
+                </dropdown>         
             </div>
         </div>
     </div>
-</div>
 
-<div class="panel-section-container">
     <div class="panel-section">
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text">Rotation:</div>
-                
-                <textbox-up-down></textbox-up-down>
-                
-                <dropdown>
-                    <option value="deg">°</option>
-                    <option value="radient">rad</option>
-                </dropdown>        
-            </div>
-        </div>
+        <div class="separator"></div>
     </div>
-</div>
 
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="panel-sub-section">
+    <div class="panel-section-container">
+        <div class="panel-section">
             <div class="horizontal-stack-layout">
-                <div class="property-text">Mass:</div>
-                
-                <textbox-up-down></textbox-up-down>
-                
-                <dropdown>
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                    <option value="lb">lb</option>
-                </dropdown>        
+                <div class="property-text">Appreance properties goes here...</div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="panel-section">
-    <div class="panel-sub-section">
-        <div class="section-title-text">Velocity</div>
-    </div>
-    
-    <div class="panel-sub-section">
-        <div class="horizontal-stack-layout">
-            <div class="property-text-XY">X:</div>
-            
-            <textbox-up-down></textbox-up-down>
-            
-            <dropdown>
-                <option value="ms">m/s</option>
-                <option value="kph">km/h</option>
-                <option value="mph">mph</option>
-            </dropdown>        
         </div>
     </div>
     
-    <div class="panel-sub-section">
-        <div class="horizontal-stack-layout">
-            <div class="property-text-XY">Y:</div>
-            
-            <textbox-up-down></textbox-up-down>
-            
-            <dropdown>
-                <option value="ms">m/s</option>
-                <option value="kph">km/h</option>
-                <option value="mph">mph</option>
-            </dropdown>         
-        </div>
-    </div>
-</div>
-
-<div class="panel-section">
-    <div class="separator"></div>
-</div>
-
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="horizontal-stack-layout">
-            <div class="property-text">Appreance properties goes here...</div>
-        </div>
-    </div>
-</div>
-
 </base-panel>
+
+  
+
