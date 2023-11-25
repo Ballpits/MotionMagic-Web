@@ -10,7 +10,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text-XY">X:</div>
                 
-                <textbox-up-down></textbox-up-down>
+                <textbox-up-down [value]="selectedObject.left || 0" (valueChanged)="updateLeftValue($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -26,7 +26,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text-XY">Y:</div>
                 
-                <textbox-up-down></textbox-up-down>
+                <textbox-up-down [value]="selectedObject.top || 0" (valueChanged)="updateTopValue($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
