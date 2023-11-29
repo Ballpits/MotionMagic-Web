@@ -15,7 +15,7 @@
   left: 0;
   right: 0;
   margin: 0;
-  height: 100%;
+  height: calc(100vh - 20px);
   display: flex;
   padding: 10px;
   pointer-events: none;
@@ -25,6 +25,10 @@
   width: 100%;
 }
 
+.left-column {
+  height: 100%;
+}
+
 .left-column > * {
   margin-top: 10px;
   pointer-events: all;
@@ -32,6 +36,30 @@
 
 .left-column > :first-child {
   margin-top: 0;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+.right-column > * {
+  margin-top: 10px;
+  pointer-events: all;
+}
+
+.right-column > :first-child {
+  margin-top: 0;
+}
+
+.scene-explorer-section {
+  max-height: 35%;
+}
+
+.properties-section {
+  flex-grow: 1; /* Use remaining space */
+  overflow: auto;
 }
 
 .right-column > * {
