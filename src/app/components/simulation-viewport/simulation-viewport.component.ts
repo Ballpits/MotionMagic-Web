@@ -65,6 +65,9 @@ export class SimulationViewportComponent implements OnInit {
       this.canvasSelectionClearedEventHandler.bind(this),
     );
     this.canvas.on('object:moving', this.objectMoveEventHandler.bind(this));
+    this.canvas.on('object:rotating', (obj) => {
+      /* placeholder */
+    });
     this.canvas.on('object:scaling', (obj) => {
       /* placeholder */
     });
@@ -122,6 +125,30 @@ export class SimulationViewportComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
         this.selectedObject.top = data;
+        this.canvas.renderAll();
+      });
+
+    this.sceneObjectSharedService
+      .getSelectedObjectWidth$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        this.selectedObject.width = data;
+        this.canvas.renderAll();
+      });
+
+    this.sceneObjectSharedService
+      .getSelectedObjectHeight$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        this.selectedObject.height = data;
+        this.canvas.renderAll();
+      });
+
+    this.sceneObjectSharedService
+      .getSelectedObjectRotation$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        this.selectedObject.angle = data;
         this.canvas.renderAll();
       });
   }

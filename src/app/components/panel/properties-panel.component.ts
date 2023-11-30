@@ -42,13 +42,46 @@ export class PropertiesPanelComponent
       .subscribe((data) => {
         this.selectedObject.top = data;
       });
+
+    this.sceneObjectSharedService
+      .getSelectedObjectWidth$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        this.selectedObject.width = data;
+      });
+
+    this.sceneObjectSharedService
+      .getSelectedObjectHeight$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        this.selectedObject.height = data;
+      });
+
+    this.sceneObjectSharedService
+      .getSelectedObjectRotation$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        this.selectedObject.angle = data;
+      });
   }
 
-  updateLeftValue(value: number) {
+  updateLeft(value: number) {
     this.sceneObjectSharedService.setSelectedObjectLeft(value);
   }
 
-  updateTopValue(value: number) {
+  updateTop(value: number) {
     this.sceneObjectSharedService.setSelectedObjectTop(value);
+  }
+
+  updateWidth(value: number) {
+    this.sceneObjectSharedService.setSelectedObjectWidth(value);
+  }
+
+  updateHeight(value: number) {
+    this.sceneObjectSharedService.setSelectedObjectHeight(value);
+  }
+
+  updateRotation(value: number) {
+    this.sceneObjectSharedService.setSelectedObjectRotation(value);
   }
 }

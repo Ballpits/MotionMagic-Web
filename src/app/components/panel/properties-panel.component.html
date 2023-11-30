@@ -10,7 +10,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text-XY">X:</div>
                 
-                <textbox-up-down [value]="selectedObject.left || 0" (valueChanged)="updateLeftValue($event)"></textbox-up-down>
+                <textbox-up-down [value]="selectedObject.left || 0" (valueChanged)="updateLeft($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -26,7 +26,47 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text-XY">Y:</div>
                 
-                <textbox-up-down [value]="selectedObject.top || 0" (valueChanged)="updateTopValue($event)"></textbox-up-down>
+                <textbox-up-down [value]="selectedObject.top || 0" (valueChanged)="updateTop($event)"></textbox-up-down>
+                
+                <dropdown>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="km">km</option>
+                    <option value="inch">inch</option>
+                    <option value="mile">mile</option>
+                </dropdown>        
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-section-container">
+    <div class="panel-section">
+        <div class="panel-sub-section">
+            <div class="section-title-text">Dimensions</div>
+        </div>
+        
+        <div class="panel-sub-section">
+            <div class="horizontal-stack-layout">
+                <div class="property-text">Width:</div>
+                
+                <textbox-up-down [value]="selectedObject.width || 20" (valueChanged)="updateWidth($event)"></textbox-up-down>
+                
+                <dropdown>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="km">km</option>
+                    <option value="inch">inch</option>
+                    <option value="mile">mile</option>
+                </dropdown>        
+            </div>
+        </div>
+        
+        <div class="panel-sub-section">
+            <div class="horizontal-stack-layout">
+                <div class="property-text">Height:</div>
+                
+                <textbox-up-down [value]="selectedObject.height || 20" (valueChanged)="updateHeight($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -46,7 +86,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text">Rotation:</div>
                 
-                <textbox-up-down></textbox-up-down>
+                <textbox-up-down [value]="selectedObject.angle || 0" (valueChanged)="updateRotation($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="deg">°</option>
