@@ -1,22 +1,29 @@
 .panel {
   position: relative;
   width: 275px;
-  max-height: 100vh; /* Cannot use "fit-content" here, otherwise the animation won't work. */
+  max-height: 100%; /* Cannot use "fit-content" here, otherwise the animation won't work. */
   background-color: #252531aa;
   border: 3px solid #4a4a68;
-  border-radius: 10px;
-  padding: 0px 10px 10px 10px;
-  overflow: hidden;
+  border-radius: 15px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  overflow: auto;
 
   backdrop-filter: blur(7.5px);
-
   transition: max-height 0.2s ease-in-out;
 }
 
 .panel.collapsed {
-  max-height: 20px;
+  max-height: 35px;
+  overflow: hidden;
 
   transition: max-height 0.2s ease-in-out;
+}
+
+.content-container {
+  max-height: 100%;
+  padding: 0px 10px 10px 10px;
 }
 
 .title-container {

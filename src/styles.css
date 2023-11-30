@@ -76,3 +76,20 @@ body {
   user-select: none;
   cursor: default;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4a4a68;
+  border-radius: 15px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6b6b99;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #6b6b99aa;
+}
