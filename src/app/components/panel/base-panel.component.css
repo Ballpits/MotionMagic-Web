@@ -4,7 +4,7 @@
   max-height: 100%; /* Cannot use "fit-content" here, otherwise the animation won't work. */
   background-color: #252531aa;
   border: 3px solid #4a4a68;
-  border-radius: 10px;
+  border-radius: 15px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -16,6 +16,7 @@
 
 .panel.collapsed {
   max-height: 35px;
+  overflow: hidden;
 
   transition: max-height 0.2s ease-in-out;
 }
@@ -23,7 +24,6 @@
 .content-container {
   max-height: 100%;
   padding: 0px 10px 10px 10px;
-  overflow: scroll;
 }
 
 .title-container {
