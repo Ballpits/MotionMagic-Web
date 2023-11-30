@@ -10,13 +10,23 @@ export class TextboxUpDownComponent {
   @Input() value: number = 0;
   @Output() valueChanged = new EventEmitter<number>();
 
+  updateValue(): void {
+    this.valueChanged.emit(Number(this.value) || 0);
+  }
+
   increment() {
     this.value++;
-    this.valueChanged.emit(this.value);
+    this.updateValue();
   }
 
   decrement() {
     this.value--;
-    this.valueChanged.emit(this.value);
+    this.updateValue();
+  }
+
+  onKeyPressEventHandler(event: any): void {
+    if (event.key === 'Enter') {
+      this.updateValue();
+    }
   }
 }
