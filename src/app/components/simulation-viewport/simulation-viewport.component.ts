@@ -64,13 +64,12 @@ export class SimulationViewportComponent implements OnInit {
       'selection:cleared',
       this.canvasSelectionClearedEventHandler.bind(this),
     );
-    this.canvas.on('object:moving', this.objectMoveEventHandler.bind(this));
-    this.canvas.on('object:rotating', (obj) => {
-      /* placeholder */
-    });
-    this.canvas.on('object:scaling', (obj) => {
-      /* placeholder */
-    });
+    this.canvas.on('object:moving', this.objectMovingEventHandler.bind(this));
+    this.canvas.on(
+      'object:rotating',
+      this.objectRotatingEventHandler.bind(this),
+    );
+    this.canvas.on('object:scaling', this.objectScalingEventHandler.bind(this));
   }
 
   fabricJSObjectSetup(): void {
@@ -111,45 +110,60 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.add(rect);
   }
 
+  /* X Position */
   sceneObjectSharedServiceSetup(): void {
     this.sceneObjectSharedService
       .getSelectedObjectLeft$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        this.selectedObject.left = data;
-        this.canvas.renderAll();
+        if (this.selectedObject.left !== data) {
+          this.selectedObject.set({ left: data });
+          this.canvas.renderAll();
+        }
       });
 
+    /* Y Position */
     this.sceneObjectSharedService
       .getSelectedObjectTop$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        this.selectedObject.top = data;
-        this.canvas.renderAll();
+        if (this.selectedObject.top !== data) {
+          this.selectedObject.set({ top: data });
+          this.canvas.renderAll();
+        }
       });
 
-    this.sceneObjectSharedService
-      .getSelectedObjectWidth$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.width = data;
-        this.canvas.renderAll();
-      });
-
-    this.sceneObjectSharedService
-      .getSelectedObjectHeight$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.height = data;
-        this.canvas.renderAll();
-      });
-
+    /* Rotation */
     this.sceneObjectSharedService
       .getSelectedObjectRotation$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        this.selectedObject.angle = data;
-        this.canvas.renderAll();
+        if (this.selectedObject.angle !== data) {
+          this.selectedObject.set({ angle: data });
+          this.canvas.renderAll();
+        }
+      });
+
+    /* Width */
+    this.sceneObjectSharedService
+      .getSelectedObjectWidth$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.selectedObject.getScaledWidth() !== data) {
+          this.selectedObject.set({ width: data });
+          this.canvas.renderAll();
+        }
+      });
+
+    /* Height */
+    this.sceneObjectSharedService
+      .getSelectedObjectHeight$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.selectedObject.getScaledHeight() !== data) {
+          this.selectedObject.set({ height: data });
+          this.canvas.renderAll();
+        }
       });
   }
 
@@ -197,20 +211,59 @@ export class SimulationViewportComponent implements OnInit {
 
   canvasSelectionCreatedEventHandler(option: any) {
     this.updateSelectedObject();
-    console.log('Slection created');
+    console.log('Selection created');
   }
 
   canvasSelectionUpdatedEventHandler(option: any) {
     this.updateSelectedObject();
-    console.log('Slection updated');
+    console.log('Selection updated');
   }
 
   canvasSelectionClearedEventHandler(option: any) {
     this.updateSelectedObject();
-    console.log('Slection cleared');
+    console.log('Selection cleared');
   }
 
-  objectMoveEventHandler(option: any) {
+  objectMovingEventHandler(option: any) {
+    if (this.selectedObject) {
+      this.sceneObjectSharedService.setSelectedObjectLeft(
+        this.selectedObject.left || 0,
+      );
+
+      this.sceneObjectSharedService.setSelectedObjectTop(
+        this.selectedObject.top || 0,
+      );
+    }
+  }
+
+  objectRotatingEventHandler(option: any) {
+    if (this.selectedObject) {
+      this.sceneObjectSharedService.setSelectedObjectRotation(
+        this.selectedObject.angle || 0,
+      );
+    }
+  }
+
+  objectScalingEventHandler(option: any) {
+    if (this.selectedObject) {
+      this.sceneObjectSharedService.setSelectedObjectWidth(
+        this.selectedObject.getScaledWidth() || 0,
+      );
+
+      this.sceneObjectSharedService.setSelectedObjectHeight(
+        this.selectedObject.getScaledHeight() || 0,
+      );
+    }
+  }
+
+  updateSelectedObject() {
+    this.selectedObject = this.canvas.getActiveObject()!;
+    this.selectedObjectChanged.emit(this.selectedObject);
+
+    this.updateSelectedObjectVisualProperties();
+  }
+
+  updateSelectedObjectVisualProperties() {
     this.sceneObjectSharedService.setSelectedObjectLeft(
       this.canvas.getActiveObject()?.left || 0,
     );
@@ -218,10 +271,17 @@ export class SimulationViewportComponent implements OnInit {
     this.sceneObjectSharedService.setSelectedObjectTop(
       this.canvas.getActiveObject()?.top || 0,
     );
-  }
 
-  updateSelectedObject() {
-    this.selectedObject = this.canvas.getActiveObject()!;
-    this.selectedObjectChanged.emit(this.selectedObject);
+    this.sceneObjectSharedService.setSelectedObjectWidth(
+      this.canvas.getActiveObject()?.width || 0,
+    );
+
+    this.sceneObjectSharedService.setSelectedObjectHeight(
+      this.canvas.getActiveObject()?.height || 0,
+    );
+
+    this.sceneObjectSharedService.setSelectedObjectRotation(
+      this.canvas.getActiveObject()?.angle || 0,
+    );
   }
 }
