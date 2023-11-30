@@ -9,11 +9,6 @@
 
   // These tasks can be run from CodeSandbox. Running one will open a log in the app.
   "tasks": {
-    "ng": {
-      "name": "ng",
-      "command": "npm run ng",
-      "runAtStart": false
-    },
     "start": {
       "name": "start",
       "command": "npm run start",
@@ -21,17 +16,19 @@
     },
     "build": {
       "name": "build",
-      "command": "npm run build",
-      "runAtStart": false
+      "command": "npm run build"
     },
     "watch": {
       "name": "watch",
-      "command": "npm run watch",
-      "runAtStart": false
+      "command": "npm run watch"
     },
     "test": {
       "name": "test",
-      "command": "npm run test",
+      "command": "npm run test"
+    },
+    "help": {
+      "name": "help",
+      "command": "ng help",
       "runAtStart": false
     }
   }

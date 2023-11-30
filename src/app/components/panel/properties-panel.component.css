@@ -33,13 +33,13 @@
 .panel-sub-section {
   color: #ffffff;
   text-align: left;
-  font-size: 18px;
 }
 
 .section-title-text {
   color: #ffffff;
   text-align: left;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .property-text {
