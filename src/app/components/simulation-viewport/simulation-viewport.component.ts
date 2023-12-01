@@ -203,8 +203,8 @@ export class SimulationViewportComponent implements OnInit {
     var delta = option.e.deltaY;
     var zoom = this.canvas!.getZoom();
     zoom *= 0.999 ** delta;
-    if (zoom > 20) zoom = 20;
-    if (zoom < 0.01) zoom = 0.01;
+    if (zoom > 5) zoom = 5;
+    if (zoom < 0.2) zoom = 0.2;
     this.canvas.zoomToPoint({ x: option.e.offsetX, y: option.e.offsetY }, zoom);
     option.e.preventDefault();
     option.e.stopPropagation();
