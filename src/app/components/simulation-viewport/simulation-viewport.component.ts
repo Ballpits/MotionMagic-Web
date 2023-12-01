@@ -46,6 +46,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.setWidth(window.innerWidth);
     this.canvas.setHeight(window.innerHeight);
     this.canvas.selectionColor = '#0080FE60';
+    this.canvas.fireMiddleClick = true;
 
     /* Event Handler Setup */
     this.canvas.on('mouse:down', this.mouseDownEventHandler.bind(this));
@@ -170,7 +171,7 @@ export class SimulationViewportComponent implements OnInit {
   mouseDownEventHandler(option: any): void {
     var event = option.e;
 
-    if (event.altKey === true) {
+    if (option.button === 2) {
       this.isPanning = true;
       this.canvas.selection = false;
       this.lastPosX = event.clientX;
