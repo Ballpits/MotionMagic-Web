@@ -9,8 +9,11 @@ import {
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { fabric } from 'fabric';
+import { Engine } from 'matter-js';
 
 import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
+
+import { SimulationRendererService } from './simulation-renderer.service';
 
 @Component({
   selector: 'simulation-viewport',
@@ -24,20 +27,27 @@ export class SimulationViewportComponent implements OnInit {
   @Output() selectedObjectChanged: EventEmitter<fabric.Object> =
     new EventEmitter<fabric.Object>();
 
-  constructor(private sceneObjectSharedService: SceneObjectSharedService) {}
+  constructor(
+    private sceneObjectSharedService: SceneObjectSharedService,
+    private simulationRendererService: SimulationRendererService,
+  ) {}
+
+  private unsubscribe = new Subject<void>();
 
   private canvas!: fabric.Canvas;
   private isPanning: boolean = false;
   private lastPosX: number = 0;
   private lastPosY: number = 0;
 
-  private unsubscribe = new Subject<void>();
+  private engine = Engine.create();
 
   ngOnInit() {
     this.fabricJSCanvasSetup();
     this.fabricJSObjectSetup();
     this.viewportSceneSetup();
     this.sceneObjectSharedServiceSetup();
+
+    this.simulationRendererService.initialize(this.canvas, this.engine);
   }
 
   fabricJSCanvasSetup(): void {
@@ -107,8 +117,8 @@ export class SimulationViewportComponent implements OnInit {
       strokeWidth: 5,
     });
 
-    this.canvas.add(triangle);
-    this.canvas.add(rect);
+    // this.canvas.add(triangle);
+    // this.canvas.add(rect);
   }
 
   /* X Position */
