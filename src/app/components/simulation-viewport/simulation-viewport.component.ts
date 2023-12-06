@@ -9,8 +9,11 @@ import {
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { fabric } from 'fabric';
+import { Engine } from 'matter-js';
 
 import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
+
+import { SimulationRendererService } from './simulation-renderer.service';
 
 @Component({
   selector: 'simulation-viewport',
@@ -24,20 +27,27 @@ export class SimulationViewportComponent implements OnInit {
   @Output() selectedObjectChanged: EventEmitter<fabric.Object> =
     new EventEmitter<fabric.Object>();
 
-  constructor(private sceneObjectSharedService: SceneObjectSharedService) {}
+  constructor(
+    private sceneObjectSharedService: SceneObjectSharedService,
+    private simulationRendererService: SimulationRendererService,
+  ) {}
+
+  private unsubscribe = new Subject<void>();
 
   private canvas!: fabric.Canvas;
   private isPanning: boolean = false;
   private lastPosX: number = 0;
   private lastPosY: number = 0;
 
-  private unsubscribe = new Subject<void>();
+  private engine = Engine.create();
 
   ngOnInit() {
     this.fabricJSCanvasSetup();
     this.fabricJSObjectSetup();
     this.viewportSceneSetup();
     this.sceneObjectSharedServiceSetup();
+
+    this.simulationRendererService.initialize(this.canvas, this.engine);
   }
 
   fabricJSCanvasSetup(): void {
@@ -46,6 +56,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.setWidth(window.innerWidth);
     this.canvas.setHeight(window.innerHeight);
     this.canvas.selectionColor = '#0080FE60';
+    this.canvas.fireMiddleClick = true;
 
     /* Event Handler Setup */
     this.canvas.on('mouse:down', this.mouseDownEventHandler.bind(this));
@@ -106,8 +117,8 @@ export class SimulationViewportComponent implements OnInit {
       strokeWidth: 5,
     });
 
-    this.canvas.add(triangle);
-    this.canvas.add(rect);
+    // this.canvas.add(triangle);
+    // this.canvas.add(rect);
   }
 
   /* X Position */
@@ -170,7 +181,7 @@ export class SimulationViewportComponent implements OnInit {
   mouseDownEventHandler(option: any): void {
     var event = option.e;
 
-    if (event.altKey === true) {
+    if (option.button === 2) {
       this.isPanning = true;
       this.canvas.selection = false;
       this.lastPosX = event.clientX;
@@ -202,8 +213,8 @@ export class SimulationViewportComponent implements OnInit {
     var delta = option.e.deltaY;
     var zoom = this.canvas!.getZoom();
     zoom *= 0.999 ** delta;
-    if (zoom > 20) zoom = 20;
-    if (zoom < 0.01) zoom = 0.01;
+    if (zoom > 5) zoom = 5;
+    if (zoom < 0.2) zoom = 0.2;
     this.canvas.zoomToPoint({ x: option.e.offsetX, y: option.e.offsetY }, zoom);
     option.e.preventDefault();
     option.e.stopPropagation();
