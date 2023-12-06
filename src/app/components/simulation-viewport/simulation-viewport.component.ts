@@ -57,7 +57,7 @@ export class SimulationViewportComponent implements OnInit {
     this.simulationRendererService.initialize(this.canvas, this.engine);
   }
 
-  fabricJSCanvasSetup(): void {
+  private fabricJSCanvasSetup(): void {
     /* Canvas Property Setup */
     this.canvas = new fabric.Canvas(this.canvasRef.nativeElement);
     this.canvas.setWidth(window.innerWidth);
@@ -90,7 +90,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.on('object:scaling', this.objectScalingEventHandler.bind(this));
   }
 
-  fabricJSObjectSetup(): void {
+  private fabricJSObjectSetup(): void {
     fabric.Object.prototype.transparentCorners = false;
     fabric.Object.prototype.padding = 5;
     fabric.Object.prototype.cornerSize = 7.5;
@@ -100,7 +100,7 @@ export class SimulationViewportComponent implements OnInit {
     fabric.Object.prototype.borderColor = '#0080FE';
   }
 
-  viewportSceneSetup(): void {
+  private viewportSceneSetup(): void {
     const rect = new fabric.Rect({
       width: 130,
       height: 100,
@@ -149,7 +149,7 @@ export class SimulationViewportComponent implements OnInit {
       });
   }
 
-  sceneObjectSharedServiceSetup(): void {
+  private sceneObjectSharedServiceSetup(): void {
     /* X Position */
     this.sceneObjectSharedService
       .getSelectedObjectLeft$()
@@ -206,7 +206,7 @@ export class SimulationViewportComponent implements OnInit {
       });
   }
 
-  mouseDownEventHandler(option: any): void {
+  private mouseDownEventHandler(option: any): void {
     var event = option.e;
 
     if (option.button === 2) {
@@ -217,14 +217,14 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  mouseUpEventHandler(option: any): void {
+  private mouseUpEventHandler(option: any): void {
     if (this.isPanning) {
       this.isPanning = false;
       this.canvas.selection = true;
     }
   }
 
-  mouseMoveEventHandler(option: any): void {
+  private mouseMoveEventHandler(option: any): void {
     if (this.isPanning) {
       var event = option.e;
       var vpt = this.canvas.viewportTransform;
@@ -237,7 +237,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  mouseWheelEventHandler(option: any) {
+  private mouseWheelEventHandler(option: any) {
     var delta = option.e.deltaY;
     var zoom = this.canvas!.getZoom();
     zoom *= 0.999 ** delta;
@@ -248,22 +248,22 @@ export class SimulationViewportComponent implements OnInit {
     option.e.stopPropagation();
   }
 
-  canvasSelectionCreatedEventHandler(option: any) {
+  private canvasSelectionCreatedEventHandler(option: any) {
     this.updateSelectedObject();
     console.log('Selection created');
   }
 
-  canvasSelectionUpdatedEventHandler(option: any) {
+  private canvasSelectionUpdatedEventHandler(option: any) {
     this.updateSelectedObject();
     console.log('Selection updated');
   }
 
-  canvasSelectionClearedEventHandler(option: any) {
+  private canvasSelectionClearedEventHandler(option: any) {
     this.updateSelectedObject();
     console.log('Selection cleared');
   }
 
-  objectMovingEventHandler(option: any) {
+  private objectMovingEventHandler(option: any) {
     if (this.selectedObject) {
       this.sceneObjectSharedService.setSelectedObjectLeft(
         this.selectedObject.left || 0,
@@ -275,7 +275,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  objectRotatingEventHandler(option: any) {
+  private objectRotatingEventHandler(option: any) {
     if (this.selectedObject) {
       this.sceneObjectSharedService.setSelectedObjectRotation(
         this.selectedObject.angle || 0,
@@ -283,7 +283,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  objectScalingEventHandler(option: any) {
+  private objectScalingEventHandler(option: any) {
     if (this.selectedObject) {
       this.sceneObjectSharedService.setSelectedObjectWidth(
         this.selectedObject.getScaledWidth() || 0,
@@ -295,14 +295,14 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  updateSelectedObject() {
+  private updateSelectedObject() {
     this.selectedObject = this.canvas.getActiveObject()!;
     this.selectedObjectChanged.emit(this.selectedObject);
 
     this.updateSelectedObjectVisualProperties();
   }
 
-  updateSelectedObjectVisualProperties() {
+  private updateSelectedObjectVisualProperties() {
     this.sceneObjectSharedService.setSelectedObjectLeft(
       this.canvas.getActiveObject()?.left || 0,
     );
