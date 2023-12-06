@@ -11,8 +11,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { fabric } from 'fabric';
 import { Engine } from 'matter-js';
 
-import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
+import { Mode } from 'src/app/model/modes.model';
 
+import { ViewportModesSharedService } from 'src/app/services/viewport-modes-shared.service';
+import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
 import { SimulationRendererService } from './simulation-renderer.service';
 
 @Component({
@@ -28,6 +30,7 @@ export class SimulationViewportComponent implements OnInit {
     new EventEmitter<fabric.Object>();
 
   constructor(
+    private viewportModesSharedService: ViewportModesSharedService,
     private sceneObjectSharedService: SceneObjectSharedService,
     private simulationRendererService: SimulationRendererService,
   ) {}
@@ -42,8 +45,12 @@ export class SimulationViewportComponent implements OnInit {
   private engine = Engine.create();
 
   ngOnInit() {
+    /* Fabric JS Setup */
     this.fabricJSCanvasSetup();
     this.fabricJSObjectSetup();
+
+    /* Viewport Setup */
+    this.viewportModesSharedServiceSetup();
     this.viewportSceneSetup();
     this.sceneObjectSharedServiceSetup();
 
@@ -121,8 +128,29 @@ export class SimulationViewportComponent implements OnInit {
     // this.canvas.add(rect);
   }
 
-  /* X Position */
+  private viewportModesSharedServiceSetup(): void {
+    this.viewportModesSharedService
+      .getCurrentMode$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        switch (data) {
+          case Mode.Contstruction:
+            break;
+
+          case Mode.States:
+            break;
+
+          case Mode.Simulation:
+            break;
+
+          default:
+            break;
+        }
+      });
+  }
+
   sceneObjectSharedServiceSetup(): void {
+    /* X Position */
     this.sceneObjectSharedService
       .getSelectedObjectLeft$()
       .pipe(takeUntil(this.unsubscribe))
