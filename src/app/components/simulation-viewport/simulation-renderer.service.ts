@@ -60,7 +60,7 @@ export class SimulationRendererService {
   }
 
   private setupMatterWorld() {
-    const box = Matter.Bodies.rectangle(640, 374, 100, 100, {
+    const box = Matter.Bodies.rectangle(640, 200, 100, 100, {
       id: 0,
       isStatic: false,
       angle: -21,
