@@ -54,6 +54,7 @@ export class SimulationViewportComponent implements OnInit {
     this.viewportSceneSetup();
     this.sceneObjectSharedServiceSetup();
 
+    /* Renderer Setup */
     this.simulationRendererService.initialize(this.canvas, this.engine);
   }
 
