@@ -4,7 +4,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class SceneObjectSharedService {
+export class SelectedObjectPropertiesSharedService {
   private selectedObjectLeft: ReplaySubject<number> = new ReplaySubject<number>(
     1,
   );

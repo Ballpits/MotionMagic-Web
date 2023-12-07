@@ -3,7 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { fabric } from 'fabric';
 
 import { BasePanelComponent } from './base-panel.component';
-import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
+import { SelectedObjectPropertiesSharedService } from 'src/app/services/selected-object-properties-shared.service';
 
 @Component({
   selector: 'properties-panel',
@@ -22,42 +22,44 @@ export class PropertiesPanelComponent
   @Output() selectedObjectChanged: EventEmitter<fabric.Object> =
     new EventEmitter<fabric.Object>();
 
-  constructor(private sceneObjectSharedService: SceneObjectSharedService) {
+  constructor(
+    private selectedObjectPropertiesSharedService: SelectedObjectPropertiesSharedService,
+  ) {
     super();
   }
 
   private unsubscribe = new Subject<void>();
 
   ngOnInit(): void {
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectLeft$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
         this.selectedObject.left = data;
       });
 
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectTop$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
         this.selectedObject.top = data;
       });
 
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectWidth$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
         this.selectedObject.width = data;
       });
 
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectHeight$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
         this.selectedObject.height = data;
       });
 
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectRotation$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
@@ -66,22 +68,22 @@ export class PropertiesPanelComponent
   }
 
   updateLeft(value: number) {
-    this.sceneObjectSharedService.setSelectedObjectLeft(value);
+    this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(value);
   }
 
   updateTop(value: number) {
-    this.sceneObjectSharedService.setSelectedObjectTop(value);
+    this.selectedObjectPropertiesSharedService.setSelectedObjectTop(value);
   }
 
   updateWidth(value: number) {
-    this.sceneObjectSharedService.setSelectedObjectWidth(value);
+    this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(value);
   }
 
   updateHeight(value: number) {
-    this.sceneObjectSharedService.setSelectedObjectHeight(value);
+    this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(value);
   }
 
   updateRotation(value: number) {
-    this.sceneObjectSharedService.setSelectedObjectRotation(value);
+    this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(value);
   }
 }
