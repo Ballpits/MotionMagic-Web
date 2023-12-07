@@ -12,9 +12,11 @@ import { fabric } from 'fabric';
 import { Engine } from 'matter-js';
 
 import { Mode } from 'src/app/model/modes.model';
+import { SceneObject } from 'src/app/model/scene.model';
 
 import { ViewportModesSharedService } from 'src/app/services/viewport-modes-shared.service';
-import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
+import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
+import { SelectedObjectPropertiesSharedService } from 'src/app/services/selected-object-properties-shared.service';
 import { SimulationRendererService } from './simulation-renderer.service';
 
 @Component({
@@ -31,7 +33,8 @@ export class SimulationViewportComponent implements OnInit {
 
   constructor(
     private viewportModesSharedService: ViewportModesSharedService,
-    private sceneObjectSharedService: SceneObjectSharedService,
+    private sceneObjectsSharedService: SceneObjectsSharedService,
+    private selectedObjectPropertiesSharedService: SelectedObjectPropertiesSharedService,
     private simulationRendererService: SimulationRendererService,
   ) {}
 
@@ -44,15 +47,20 @@ export class SimulationViewportComponent implements OnInit {
 
   private engine = Engine.create();
 
+  private sceneObjects!: SceneObject[];
+
   ngOnInit() {
     /* Fabric JS Setup */
     this.fabricJSCanvasSetup();
     this.fabricJSObjectSetup();
 
-    /* Viewport Setup */
+    /* Shared Service Setup */
     this.viewportModesSharedServiceSetup();
-    this.viewportSceneSetup();
     this.sceneObjectSharedServiceSetup();
+    this.selectedObjectPropertiesSharedServiceSetup();
+
+    /* Viewport Setup */
+    this.viewportSceneSetup();
 
     /* Renderer Setup */
     this.simulationRendererService.initialize(this.canvas, this.engine);
@@ -159,8 +167,19 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private sceneObjectSharedServiceSetup(): void {
+    this.sceneObjectsSharedService
+      .getSceneObjects$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.sceneObjects !== data) {
+          this.sceneObjects = data;
+        }
+      });
+  }
+
+  private selectedObjectPropertiesSharedServiceSetup(): void {
     /* X Position */
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectLeft$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
@@ -171,7 +190,7 @@ export class SimulationViewportComponent implements OnInit {
       });
 
     /* Y Position */
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectTop$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
@@ -182,7 +201,7 @@ export class SimulationViewportComponent implements OnInit {
       });
 
     /* Rotation */
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectRotation$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
@@ -193,7 +212,7 @@ export class SimulationViewportComponent implements OnInit {
       });
 
     /* Width */
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectWidth$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
@@ -204,7 +223,7 @@ export class SimulationViewportComponent implements OnInit {
       });
 
     /* Height */
-    this.sceneObjectSharedService
+    this.selectedObjectPropertiesSharedService
       .getSelectedObjectHeight$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
@@ -274,11 +293,11 @@ export class SimulationViewportComponent implements OnInit {
 
   private objectMovingEventHandler(option: any) {
     if (this.selectedObject) {
-      this.sceneObjectSharedService.setSelectedObjectLeft(
+      this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(
         this.selectedObject.left || 0,
       );
 
-      this.sceneObjectSharedService.setSelectedObjectTop(
+      this.selectedObjectPropertiesSharedService.setSelectedObjectTop(
         this.selectedObject.top || 0,
       );
     }
@@ -286,7 +305,7 @@ export class SimulationViewportComponent implements OnInit {
 
   private objectRotatingEventHandler(option: any) {
     if (this.selectedObject) {
-      this.sceneObjectSharedService.setSelectedObjectRotation(
+      this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(
         this.selectedObject.angle || 0,
       );
     }
@@ -294,11 +313,11 @@ export class SimulationViewportComponent implements OnInit {
 
   private objectScalingEventHandler(option: any) {
     if (this.selectedObject) {
-      this.sceneObjectSharedService.setSelectedObjectWidth(
+      this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(
         this.selectedObject.getScaledWidth() || 0,
       );
 
-      this.sceneObjectSharedService.setSelectedObjectHeight(
+      this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(
         this.selectedObject.getScaledHeight() || 0,
       );
     }
@@ -312,23 +331,23 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private updateSelectedObjectVisualProperties() {
-    this.sceneObjectSharedService.setSelectedObjectLeft(
+    this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(
       this.canvas.getActiveObject()?.left || 0,
     );
 
-    this.sceneObjectSharedService.setSelectedObjectTop(
+    this.selectedObjectPropertiesSharedService.setSelectedObjectTop(
       this.canvas.getActiveObject()?.top || 0,
     );
 
-    this.sceneObjectSharedService.setSelectedObjectWidth(
+    this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(
       this.canvas.getActiveObject()?.width || 0,
     );
 
-    this.sceneObjectSharedService.setSelectedObjectHeight(
+    this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(
       this.canvas.getActiveObject()?.height || 0,
     );
 
-    this.sceneObjectSharedService.setSelectedObjectRotation(
+    this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(
       this.canvas.getActiveObject()?.angle || 0,
     );
   }
