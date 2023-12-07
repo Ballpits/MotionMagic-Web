@@ -11,8 +11,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { fabric } from 'fabric';
 import { Engine } from 'matter-js';
 
-import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
+import { Mode } from 'src/app/model/modes.model';
 
+import { ViewportModesSharedService } from 'src/app/services/viewport-modes-shared.service';
+import { SceneObjectSharedService } from 'src/app/services/scene-object-shared.service';
 import { SimulationRendererService } from './simulation-renderer.service';
 
 @Component({
@@ -28,6 +30,7 @@ export class SimulationViewportComponent implements OnInit {
     new EventEmitter<fabric.Object>();
 
   constructor(
+    private viewportModesSharedService: ViewportModesSharedService,
     private sceneObjectSharedService: SceneObjectSharedService,
     private simulationRendererService: SimulationRendererService,
   ) {}
@@ -42,15 +45,22 @@ export class SimulationViewportComponent implements OnInit {
   private engine = Engine.create();
 
   ngOnInit() {
+    /* Fabric JS Setup */
     this.fabricJSCanvasSetup();
     this.fabricJSObjectSetup();
+
+    /* Viewport Setup */
+    this.viewportModesSharedServiceSetup();
     this.viewportSceneSetup();
     this.sceneObjectSharedServiceSetup();
 
+    /* Renderer Setup */
     this.simulationRendererService.initialize(this.canvas, this.engine);
+
+    this.viewportModesSharedService.setCurrentMode(Mode.Simulation);
   }
 
-  fabricJSCanvasSetup(): void {
+  private fabricJSCanvasSetup(): void {
     /* Canvas Property Setup */
     this.canvas = new fabric.Canvas(this.canvasRef.nativeElement);
     this.canvas.setWidth(window.innerWidth);
@@ -83,7 +93,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.on('object:scaling', this.objectScalingEventHandler.bind(this));
   }
 
-  fabricJSObjectSetup(): void {
+  private fabricJSObjectSetup(): void {
     fabric.Object.prototype.transparentCorners = false;
     fabric.Object.prototype.padding = 5;
     fabric.Object.prototype.cornerSize = 7.5;
@@ -93,7 +103,7 @@ export class SimulationViewportComponent implements OnInit {
     fabric.Object.prototype.borderColor = '#0080FE';
   }
 
-  viewportSceneSetup(): void {
+  private viewportSceneSetup(): void {
     const rect = new fabric.Rect({
       width: 130,
       height: 100,
@@ -121,8 +131,35 @@ export class SimulationViewportComponent implements OnInit {
     // this.canvas.add(rect);
   }
 
-  /* X Position */
-  sceneObjectSharedServiceSetup(): void {
+  private viewportModesSharedServiceSetup(): void {
+    this.viewportModesSharedService
+      .getCurrentMode$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        switch (data) {
+          case Mode.Contstruction:
+            console.log('Mode: Contstruction');
+            this.allowSceneObjectControl(true); // Enable controls for all scene objects.
+            break;
+
+          case Mode.States:
+            console.log('Mode: States');
+            this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+            break;
+
+          case Mode.Simulation:
+            console.log('Mode: Simulation');
+            this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+            break;
+
+          default:
+            break;
+        }
+      });
+  }
+
+  private sceneObjectSharedServiceSetup(): void {
+    /* X Position */
     this.sceneObjectSharedService
       .getSelectedObjectLeft$()
       .pipe(takeUntil(this.unsubscribe))
@@ -178,7 +215,7 @@ export class SimulationViewportComponent implements OnInit {
       });
   }
 
-  mouseDownEventHandler(option: any): void {
+  private mouseDownEventHandler(option: any): void {
     var event = option.e;
 
     if (option.button === 2) {
@@ -189,14 +226,14 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  mouseUpEventHandler(option: any): void {
+  private mouseUpEventHandler(option: any): void {
     if (this.isPanning) {
       this.isPanning = false;
       this.canvas.selection = true;
     }
   }
 
-  mouseMoveEventHandler(option: any): void {
+  private mouseMoveEventHandler(option: any): void {
     if (this.isPanning) {
       var event = option.e;
       var vpt = this.canvas.viewportTransform;
@@ -209,7 +246,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  mouseWheelEventHandler(option: any) {
+  private mouseWheelEventHandler(option: any) {
     var delta = option.e.deltaY;
     var zoom = this.canvas!.getZoom();
     zoom *= 0.999 ** delta;
@@ -220,22 +257,22 @@ export class SimulationViewportComponent implements OnInit {
     option.e.stopPropagation();
   }
 
-  canvasSelectionCreatedEventHandler(option: any) {
+  private canvasSelectionCreatedEventHandler(option: any) {
     this.updateSelectedObject();
     console.log('Selection created');
   }
 
-  canvasSelectionUpdatedEventHandler(option: any) {
+  private canvasSelectionUpdatedEventHandler(option: any) {
     this.updateSelectedObject();
     console.log('Selection updated');
   }
 
-  canvasSelectionClearedEventHandler(option: any) {
+  private canvasSelectionClearedEventHandler(option: any) {
     this.updateSelectedObject();
     console.log('Selection cleared');
   }
 
-  objectMovingEventHandler(option: any) {
+  private objectMovingEventHandler(option: any) {
     if (this.selectedObject) {
       this.sceneObjectSharedService.setSelectedObjectLeft(
         this.selectedObject.left || 0,
@@ -247,7 +284,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  objectRotatingEventHandler(option: any) {
+  private objectRotatingEventHandler(option: any) {
     if (this.selectedObject) {
       this.sceneObjectSharedService.setSelectedObjectRotation(
         this.selectedObject.angle || 0,
@@ -255,7 +292,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  objectScalingEventHandler(option: any) {
+  private objectScalingEventHandler(option: any) {
     if (this.selectedObject) {
       this.sceneObjectSharedService.setSelectedObjectWidth(
         this.selectedObject.getScaledWidth() || 0,
@@ -267,14 +304,14 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  updateSelectedObject() {
+  private updateSelectedObject() {
     this.selectedObject = this.canvas.getActiveObject()!;
     this.selectedObjectChanged.emit(this.selectedObject);
 
     this.updateSelectedObjectVisualProperties();
   }
 
-  updateSelectedObjectVisualProperties() {
+  private updateSelectedObjectVisualProperties() {
     this.sceneObjectSharedService.setSelectedObjectLeft(
       this.canvas.getActiveObject()?.left || 0,
     );
@@ -294,5 +331,21 @@ export class SimulationViewportComponent implements OnInit {
     this.sceneObjectSharedService.setSelectedObjectRotation(
       this.canvas.getActiveObject()?.angle || 0,
     );
+  }
+
+  private allowSceneObjectControl(isEnabled: boolean) {
+    /* Enable or disable controls for all scene objects */
+    this.canvas.getObjects().forEach((element) => {
+      element.selectable = isEnabled;
+    });
+
+    /* Enable or disable selection on canvas and change mouse cursor */
+    if (isEnabled) {
+      this.canvas.selection = true;
+      this.canvas.hoverCursor = 'move';
+    } else {
+      this.canvas.selection = false;
+      this.canvas.hoverCursor = 'default';
+    }
   }
 }
