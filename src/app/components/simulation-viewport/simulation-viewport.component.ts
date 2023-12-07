@@ -56,6 +56,8 @@ export class SimulationViewportComponent implements OnInit {
 
     /* Renderer Setup */
     this.simulationRendererService.initialize(this.canvas, this.engine);
+
+    this.viewportModesSharedService.setCurrentMode(Mode.Simulation);
   }
 
   private fabricJSCanvasSetup(): void {
@@ -136,12 +138,18 @@ export class SimulationViewportComponent implements OnInit {
       .subscribe((data) => {
         switch (data) {
           case Mode.Contstruction:
+            console.log('Mode: Contstruction');
+            this.allowSceneObjectControl(true); // Enable controls for all scene objects.
             break;
 
           case Mode.States:
+            console.log('Mode: States');
+            this.allowSceneObjectControl(false); // Disable controls for all scene objects.
             break;
 
           case Mode.Simulation:
+            console.log('Mode: Simulation');
+            this.allowSceneObjectControl(false); // Disable controls for all scene objects.
             break;
 
           default:
@@ -323,5 +331,21 @@ export class SimulationViewportComponent implements OnInit {
     this.sceneObjectSharedService.setSelectedObjectRotation(
       this.canvas.getActiveObject()?.angle || 0,
     );
+  }
+
+  private allowSceneObjectControl(isEnabled: boolean) {
+    /* Enable or disable controls for all scene objects */
+    this.canvas.getObjects().forEach((element) => {
+      element.selectable = isEnabled;
+    });
+
+    /* Enable or disable selection on canvas and change mouse cursor */
+    if (isEnabled) {
+      this.canvas.selection = true;
+      this.canvas.hoverCursor = 'move';
+    } else {
+      this.canvas.selection = false;
+      this.canvas.hoverCursor = 'default';
+    }
   }
 }
