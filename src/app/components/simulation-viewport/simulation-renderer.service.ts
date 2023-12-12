@@ -1,85 +1,197 @@
 import { Injectable } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+
 import { fabric } from 'fabric';
 import * as Matter from 'matter-js';
+
+import {
+  ObjectType,
+  Rectangle,
+  Circle,
+  Polygon,
+  SceneObject,
+} from 'src/app/model/scene.model';
+
+import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
+import { RotationConverterService } from 'src/app/services/rotation-converter.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SimulationRendererService {
-  private canvas!: fabric.Canvas;
-  private engine!: Matter.Engine;
+  private unsubscribe = new Subject<void>();
 
+  private canvas!: fabric.Canvas;
+
+  private engine!: Matter.Engine;
   private runner = Matter.Runner.create();
 
-  private testRect = new fabric.Rect({
-    left: 640,
-    top: 374,
-    width: 100,
-    height: 100,
-    originX: 'center',
-    originY: 'center',
-    fill: '#368BFF',
-  });
+  private sceneObjects!: SceneObject[];
 
-  private trianglePoints = [
-    { x: 0, y: 250 },
-    { x: 650, y: 250 },
-    { x: 650, y: 0 },
-  ];
+  private isSetupComplete: boolean = false;
 
-  private triangle = new fabric.Polygon(this.trianglePoints, {
-    left: 200,
-    top: 400,
-    fill: '#FFFCBA',
-    stroke: '#D6D08B',
-    strokeWidth: 5,
-  });
+  constructor(
+    private sceneObjectSharedService: SceneObjectsSharedService,
+    private rotationConverterService: RotationConverterService,
+  ) {}
 
-  private floor = new fabric.Rect({
-    left: 0,
-    top: 500,
-    width: 500,
-    height: 100,
-    originX: 'center',
-    originY: 'center',
-    fill: '#368BBB',
-  });
-
-  constructor() {}
-
-  initialize(canvas: fabric.Canvas, engine: Matter.Engine) {
+  public initialize(canvas: fabric.Canvas, engine: Matter.Engine) {
     this.canvas = canvas;
     this.engine = engine;
 
-    this.canvas.add(this.testRect);
-    this.canvas.add(this.triangle);
-    this.canvas.add(this.floor);
+    this.sceneObjectSharedServiceSetup();
 
-    // Set up Matter.js world and events
-    this.setupMatterWorld();
+    this.renderLoop();
   }
 
-  private setupMatterWorld() {
-    const box = Matter.Bodies.rectangle(640, 200, 100, 100, {
-      id: 0,
-      isStatic: false,
-      angle: -21,
+  private sceneObjectSharedServiceSetup(): void {
+    this.sceneObjectSharedService
+      .getSceneObjects$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.sceneObjects !== data) {
+          this.sceneObjects = data;
+        }
+
+        if (!this.isSetupComplete) {
+          this.sceneObjectsGraphicsSetup();
+          this.sceneObjectsPhysicsSetup();
+        }
+      });
+  }
+
+  private sceneObjectsGraphicsSetup(): void {
+    this.sceneObjects.forEach((element) => {
+      let object!: fabric.Object;
+
+      switch (element.type) {
+        case ObjectType.Rectangle:
+          let rectangle = element as Rectangle;
+
+          object = new fabric.Rect({
+            name: rectangle.id.toString(),
+
+            originX: 'center',
+            originY: 'center',
+
+            left: rectangle.position.x,
+            top: rectangle.position.y,
+
+            angle: rectangle.rotation.value,
+
+            width: rectangle.dimension.width,
+            height: rectangle.dimension.height,
+
+            fill: rectangle.color,
+          });
+          break;
+
+        case ObjectType.Circle:
+          let circle = element as Circle;
+
+          object = new fabric.Circle({
+            name: circle.id.toString(),
+
+            originX: 'center',
+            originY: 'center',
+
+            left: circle.position.x,
+            top: circle.position.y,
+
+            radius: circle.radius.value,
+
+            fill: circle.color,
+          });
+          break;
+
+        case ObjectType.Polygon:
+          let polygon = element as Polygon;
+
+          object = new fabric.Polygon(polygon.points, {
+            name: polygon.id.toString(),
+
+            left: polygon.position.x,
+            top: polygon.position.x,
+
+            fill: polygon.color,
+            stroke: '#D6D08B',
+            strokeWidth: 5,
+          });
+          break;
+
+        default:
+          break;
+      }
+
+      this.canvas.add(object);
+    });
+  }
+
+  private sceneObjectsPhysicsSetup(): void {
+    let physicsObjects: Matter.Body[] = [];
+
+    this.sceneObjects.forEach((element) => {
+      let physicsObject!: Matter.Body;
+
+      switch (element.type) {
+        case ObjectType.Rectangle:
+          let rectangle = element as Rectangle;
+
+          physicsObject = Matter.Bodies.rectangle(
+            rectangle.position.x,
+            rectangle.position.y,
+            rectangle.dimension.width,
+            rectangle.dimension.height,
+            {
+              id: rectangle.id,
+              isStatic: rectangle.static,
+              angle: this.rotationConverterService.degreesToRadians(
+                rectangle.rotation.value,
+              ),
+            },
+          );
+
+          break;
+
+        case ObjectType.Circle:
+          let circle = element as Circle;
+
+          physicsObject = Matter.Bodies.circle(
+            circle.position.x,
+            circle.position.y,
+            circle.radius.value,
+            {
+              id: circle.id,
+              isStatic: circle.static,
+              angle: this.rotationConverterService.degreesToRadians(
+                circle.rotation.value,
+              ),
+            },
+          );
+          break;
+
+        case ObjectType.Polygon:
+          let polygon = element as Polygon;
+
+          physicsObject = Matter.Bodies.fromVertices(
+            polygon.position.x,
+            polygon.position.y,
+            [polygon.points],
+            {
+              id: polygon.id,
+              isStatic: polygon.static,
+            },
+          );
+          break;
+
+        default:
+          break;
+      }
+
+      physicsObjects.push(physicsObject);
     });
 
-    const ramp = Matter.Bodies.fromVertices(550, 600, [this.trianglePoints], {
-      id: 1,
-      isStatic: true,
-    });
-
-    const floor = Matter.Bodies.rectangle(0, 500, 500, 100, {
-      id: 2,
-      isStatic: true,
-    });
-
-    Matter.World.add(this.engine.world, [box, ramp, floor]);
-
-    // Set up Fabric.js rendering loop
-    this.renderLoop();
+    Matter.World.add(this.engine.world, physicsObjects);
   }
 
   private renderLoop() {
@@ -97,66 +209,29 @@ export class SimulationRendererService {
   }
 
   private renderMatterObjects() {
+    let canvasObjects = this.canvas.getObjects();
+
     // Iterate through Matter.js bodies and render them using Fabric.js
     Matter.Composite.allBodies(this.engine.world).forEach((body) => {
-      switch (body.id) {
-        case 0:
-          this.testRect.set({
-            left: body.position.x,
-            top: body.position.y,
-            angle: (body.angle * 180) / Math.PI,
-          });
-          break;
-        case 1:
-          this.triangle.set({
-            left: body.bounds.min.x,
-            top: body.bounds.min.y,
-            angle: (body.angle * 180) / Math.PI,
-          });
-          break;
-        case 2:
-          this.floor.set({
-            left: body.position.x,
-            top: body.position.y,
-            angle: (body.angle * 180) / Math.PI,
-          });
+      let currentObject = canvasObjects.find(
+        (obj) => obj.name === body.id.toString(),
+      );
 
-          break;
-        default:
-          break;
+      if (currentObject?.type === 'rect' || currentObject?.type === 'circle') {
+        currentObject.set({
+          left: body.position.x,
+          top: body.position.y,
+          angle: this.rotationConverterService.radiansToDegrees(body.angle),
+        });
+      } else {
+        currentObject!.set({
+          left: body.bounds.min.x,
+          top: body.bounds.min.y,
+          angle: this.rotationConverterService.radiansToDegrees(body.angle),
+        });
       }
     });
 
     this.canvas.requestRenderAll();
   }
-
-  // private convertMatterToFabric(body: Matter.Body): fabric.Object {
-  //   // Implement your conversion logic here
-  //   // Create a Fabric.js object based on Matter.js body properties
-
-  //   var width = body.bounds.max.x - body.bounds.min.x;
-  //   var height = body.bounds.max.y - body.bounds.min.y;
-
-  //   if (body.id == 0) {
-  //     this.testRect.set({
-  //       left: body.position.x - width / 2,
-  //       top: body.position.y - height / 2,
-  //       width: width,
-  //       height: height,
-  //       angle: body.angle,
-  //     });
-
-  //     return this.testRect;
-  //   } else {
-  //     this.triangle.set({
-  //       left: body.position.x - body.bounds.min.x,
-  //       top: body.position.y - body.bounds.min.y,
-  //       width: width,
-  //       height: height,
-  //       angle: body.angle,
-  //     });
-
-  //     return this.triangle;
-  //   }
-  // }
 }
