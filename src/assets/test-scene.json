@@ -47,6 +47,18 @@
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
       "color": "#368BBB"
+    },
+    {
+      "id": 3,
+      "static": false,
+      "name": "Ball",
+      "type": "circle",
+      "position": { "x": 640, "y": 0, "unit": "cm" },
+      "radius": { "value": 39.13776, "unit": "cm" },
+      "rotation": { "value": 0, "unit": "deg" },
+      "mass": { "value": 0, "unit": "kg" },
+      "friction": { "static": 0.3, "kinetic": 0.2 },
+      "color": "#CCCCFF"
     }
   ]
 }
