@@ -59,13 +59,8 @@ export class SimulationViewportComponent implements OnInit {
     this.sceneObjectSharedServiceSetup();
     this.selectedObjectPropertiesSharedServiceSetup();
 
-    /* Viewport Setup */
-    this.viewportSceneSetup();
-
     /* Renderer Setup */
     this.simulationRendererService.initialize(this.canvas, this.engine);
-
-    this.viewportModesSharedService.setCurrentMode(Mode.Simulation);
   }
 
   private fabricJSCanvasSetup(): void {
@@ -109,34 +104,6 @@ export class SimulationViewportComponent implements OnInit {
     fabric.Object.prototype.cornerStrokeColor = '#0080FE';
     fabric.Object.prototype.cornerStyle = 'circle';
     fabric.Object.prototype.borderColor = '#0080FE';
-  }
-
-  private viewportSceneSetup(): void {
-    const rect = new fabric.Rect({
-      width: 130,
-      height: 100,
-      left: 640,
-      top: 374,
-      angle: -21,
-      fill: '#368BFF',
-    });
-
-    const trianglePoints = [
-      { x: 0, y: 250 },
-      { x: 650, y: 250 },
-      { x: 650, y: 0 },
-    ];
-
-    const triangle = new fabric.Polygon(trianglePoints, {
-      left: 200,
-      top: 400,
-      fill: '#FFFCBA',
-      stroke: '#D6D08B',
-      strokeWidth: 5,
-    });
-
-    // this.canvas.add(triangle);
-    // this.canvas.add(rect);
   }
 
   private viewportModesSharedServiceSetup(): void {

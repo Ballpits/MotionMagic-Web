@@ -14,7 +14,7 @@
       "name": "Box",
       "type": "rectangle",
       "position": { "x": 640, "y": 374, "unit": "cm" },
-      "diamension": { "width": 130, "height": 100, "unit": "cm" },
+      "dimension": { "width": 130, "height": 100, "unit": "cm" },
       "rotation": { "value": -21, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
@@ -42,11 +42,23 @@
       "name": "Floor",
       "type": "rectangle",
       "position": { "x": 0, "y": 500, "unit": "cm" },
-      "diamension": { "width": 500, "height": 100, "unit": "cm" },
+      "dimension": { "width": 500, "height": 100, "unit": "cm" },
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
       "color": "#368BBB"
+    },
+    {
+      "id": 3,
+      "static": false,
+      "name": "Ball",
+      "type": "circle",
+      "position": { "x": 640, "y": 0, "unit": "cm" },
+      "radius": { "value": 39.13776, "unit": "cm" },
+      "rotation": { "value": 0, "unit": "deg" },
+      "mass": { "value": 0, "unit": "kg" },
+      "friction": { "static": 0.3, "kinetic": 0.2 },
+      "color": "#CCCCFF"
     }
   ]
 }
