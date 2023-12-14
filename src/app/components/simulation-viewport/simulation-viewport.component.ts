@@ -233,14 +233,28 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private mouseWheelEventHandler(option: any) {
-    var delta = option.e.deltaY;
-    var zoom = this.canvas!.getZoom();
-    zoom *= 0.999 ** delta;
-    if (zoom > 5) zoom = 5;
-    if (zoom < 0.2) zoom = 0.2;
-    this.canvas.zoomToPoint({ x: option.e.offsetX, y: option.e.offsetY }, zoom);
     option.e.preventDefault();
     option.e.stopPropagation();
+
+    if (option.e.ctrlKey) {
+      var delta = option.e.deltaY;
+      var zoom = this.canvas!.getZoom();
+      zoom *= 0.985 ** delta;
+      if (zoom > 5) zoom = 5;
+      if (zoom < 0.2) zoom = 0.2;
+      this.canvas.zoomToPoint(
+        { x: option.e.offsetX, y: option.e.offsetY },
+        zoom,
+      );
+    } else {
+      let event = option.e;
+      let vpt = this.canvas.viewportTransform;
+      vpt![4] -= event.deltaX;
+      vpt![5] -= event.deltaY;
+
+      this.canvas.setViewportTransform(vpt!);
+      this.canvas.requestRenderAll();
+    }
   }
 
   private canvasSelectionCreatedEventHandler(option: any) {
