@@ -11,8 +11,12 @@ import { ViewportModesSharedService } from 'src/app/services/viewport-modes-shar
 export class MenuBarComponent {
   constructor(private viewportModesSharedService: ViewportModesSharedService) {}
 
+  ngOnInit(): void {
+    this.viewportModesSharedService.setCurrentMode(this.selectedMode);
+  }
+
   showDropdown: { [key: string]: boolean } = {};
-  selectedMode: Mode | undefined;
+  selectedMode: Mode = Mode.Construction;
 
   toggleDropdown(menu: string): void {
     this.showDropdown[menu] = !this.showDropdown[menu];
