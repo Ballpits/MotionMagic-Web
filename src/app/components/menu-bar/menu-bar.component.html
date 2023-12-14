@@ -53,17 +53,17 @@
     
     <div class="mode-switcher">
         <label class="radio-label">
-            <input type="radio" name="mode" value="construction">
+            <input type="radio" name="mode" value="construction" [(ngModel)]="selectedMode" (change)="onModeChange()">
             <span>Construction</span>
         </label>
         
         <label class="radio-label">
-            <input type="radio" name="mode" value="states">
+            <input type="radio" name="mode" value="states" [(ngModel)]="selectedMode" (change)="onModeChange()">
             <span>States</span>
         </label>
         
         <label class="radio-label">
-            <input type="radio" name="mode" value="simulation">
+            <input type="radio" name="mode" value="simulation" [(ngModel)]="selectedMode" (change)="onModeChange()">
             <span>Simulation</span>
         </label>
     </div>
