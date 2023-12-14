@@ -1,5 +1,5 @@
 export enum Mode {
-  Contstruction,
-  States,
-  Simulation,
+  Construction = 'construction',
+  States = 'states',
+  Simulation = 'simulation',
 }

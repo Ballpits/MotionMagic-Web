@@ -112,7 +112,7 @@ export class SimulationViewportComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
         switch (data) {
-          case Mode.Contstruction:
+          case Mode.Construction:
             console.log('Mode: Contstruction');
             this.allowSceneObjectControl(true); // Enable controls for all scene objects.
             break;
