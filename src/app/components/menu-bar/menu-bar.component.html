@@ -1,0 +1,70 @@
+<div class="container unselectable">
+    <div class="menu-item" (click)="toggleDropdown('file')">
+        File
+        <div *ngIf="showDropdown['file']" class="dropdown-container">
+            <div>Download Project</div>
+            <div>Rename Project</div>
+            <div>Duplicate Project</div>
+            <div>See All Projects</div>
+        </div>
+    </div>
+    
+    <div class="menu-item" (click)="toggleDropdown('edit')">
+        Edit
+        <div *ngIf="showDropdown['edit']" class="dropdown-container">
+            <div>Cut</div>
+            <div>Copy</div>
+            <div>Paste</div>
+            <div>Duplicate</div>
+            <div>Seleact All</div>
+            <div>Group</div>
+            <div>Ungroup</div>
+        </div>
+    </div>
+    
+    <div class="menu-item" (click)="toggleDropdown('view')">
+        View
+        <div *ngIf="showDropdown['view']" class="dropdown-container">
+            <div>100%</div>
+            <div>Zoom In</div>
+            <div>Zoom Out</div>
+        </div>
+    </div>
+    
+    <div class="menu-item" (click)="toggleDropdown('share')">
+        Share
+        <div *ngIf="showDropdown['share']" class="dropdown-container">
+            <div>Invite Others</div>
+            <div>Permission Settings</div>
+        </div>
+    </div>
+    
+    <div class="menu-item" (click)="toggleDropdown('help')">
+        Help
+        <div *ngIf="showDropdown['help']" class="dropdown-container">
+            <div>User Guide</div>
+            <div>Restart Tutorial</div>
+            <div>Report Problem</div>
+            <div>Acknowledgments</div>
+        </div>
+    </div>
+    
+    <div class="separator"></div>
+    
+    <div class="mode-switcher">
+        <label class="radio-label">
+            <input type="radio" name="mode" value="construction">
+            <span>Construction</span>
+        </label>
+        
+        <label class="radio-label">
+            <input type="radio" name="mode" value="states">
+            <span>States</span>
+        </label>
+        
+        <label class="radio-label">
+            <input type="radio" name="mode" value="simulation">
+            <span>Simulation</span>
+        </label>
+    </div>
+</div>
