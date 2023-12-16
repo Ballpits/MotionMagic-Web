@@ -1,5 +1,5 @@
 <div class="container unselectable">
-    <div class="menu-item" (click)="toggleDropdown('file')">
+    <div class="menu-item" [class.active]="activeTab === 'file'" (click)="toggleDropdown('file')" (mouseenter)="openDropdown('file')">
         File
         <div *ngIf="showDropdown['file']" class="dropdown-container">
             <div>Download Project</div>
@@ -9,7 +9,7 @@
         </div>
     </div>
     
-    <div class="menu-item" (click)="toggleDropdown('edit')">
+    <div class="menu-item" [class.active]="activeTab === 'edit'" (click)="toggleDropdown('edit')" (mouseenter)="openDropdown('edit')">
         Edit
         <div *ngIf="showDropdown['edit']" class="dropdown-container">
             <div>Cut</div>
@@ -22,7 +22,7 @@
         </div>
     </div>
     
-    <div class="menu-item" (click)="toggleDropdown('view')">
+    <div class="menu-item" [class.active]="activeTab === 'view'" (click)="toggleDropdown('view')" (mouseenter)="openDropdown('view')">
         View
         <div *ngIf="showDropdown['view']" class="dropdown-container">
             <div>100%</div>
@@ -31,7 +31,7 @@
         </div>
     </div>
     
-    <div class="menu-item" (click)="toggleDropdown('share')">
+    <div class="menu-item" [class.active]="activeTab === 'share'" (click)="toggleDropdown('share')" (mouseenter)="openDropdown('share')">
         Share
         <div *ngIf="showDropdown['share']" class="dropdown-container">
             <div>Invite Others</div>
@@ -39,7 +39,7 @@
         </div>
     </div>
     
-    <div class="menu-item" (click)="toggleDropdown('help')">
+    <div class="menu-item" [class.active]="activeTab === 'help'" (click)="toggleDropdown('help')" (mouseenter)="openDropdown('help')">
         Help
         <div *ngIf="showDropdown['help']" class="dropdown-container">
             <div>User Guide</div>

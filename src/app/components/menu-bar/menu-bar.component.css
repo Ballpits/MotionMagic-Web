@@ -1,8 +1,8 @@
 .container {
   display: flex;
 
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
   background-color: #252531aa;
   backdrop-filter: blur(7.5px);
 
@@ -17,7 +17,7 @@
 }
 
 .container > * {
-  margin-right: 10px;
+  margin-right: 5px;
 
   color: white;
   font-size: 16px;
@@ -53,8 +53,17 @@
   z-index: 1;
 }
 
+.menu-item {
+  padding: 2.5px 5px;
+}
+
 .menu-item .dropdown-container {
   display: block; /* Show the dropdown menu*/
+}
+
+.menu-item.active {
+  background-color: #6b6b99; /* Background color for the active tab */
+  border-radius: 5px;
 }
 
 /* Dropdown menu items */
@@ -107,5 +116,4 @@
 
 .radio-label input:checked + span {
   background-color: #6b6b99;
-  color: white;
 }
