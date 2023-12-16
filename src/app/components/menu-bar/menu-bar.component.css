@@ -53,6 +53,10 @@
   z-index: 1;
 }
 
+.project-name-text {
+  font-weight: 600;
+}
+
 .menu-item {
   padding: 2.5px 5px;
 }

@@ -1,11 +1,14 @@
 <div class="container unselectable">
+    <div class="menu-item project-name-text">Demo Project</div>
+
+    <div class="separator"></div>
+
     <div class="menu-item" [class.active]="activeTab === 'project'" (click)="toggleDropdown('project')" (mouseenter)="openDropdown('project')">
         Project
         <div *ngIf="showDropdown['project']" class="dropdown-container">
             <div>New</div>
             <div>Open...</div>
             <div>Open Recent</div>
-            <div>Rename</div>
             <div>Download</div>
             <div>See All Projects</div>
         </div>
