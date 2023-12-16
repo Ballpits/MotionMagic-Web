@@ -14,6 +14,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { TextboxUpDownComponent } from './components/textbox-up-down/textbox-up-down.component';
 import { SimulationViewportComponent } from './components/simulation-viewport/simulation-viewport.component';
 import { SceneParserService } from './services/scene-parser.service';
+import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { SceneParserService } from './services/scene-parser.service';
     DropdownComponent,
     TextboxUpDownComponent,
     SimulationViewportComponent,
+    MenuBarComponent,
   ],
   imports: [
     BrowserModule,

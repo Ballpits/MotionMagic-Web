@@ -23,6 +23,16 @@
 
 .middle-column {
   width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.middle-column > * {
+  pointer-events: all;
+}
+
+.menu-bar {
+  height: fit-content;
 }
 
 .left-column {
