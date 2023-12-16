@@ -1,10 +1,12 @@
 <div class="container unselectable">
-    <div class="menu-item" [class.active]="activeTab === 'file'" (click)="toggleDropdown('file')" (mouseenter)="openDropdown('file')">
-        File
-        <div *ngIf="showDropdown['file']" class="dropdown-container">
-            <div>Download Project</div>
-            <div>Rename Project</div>
-            <div>Duplicate Project</div>
+    <div class="menu-item" [class.active]="activeTab === 'project'" (click)="toggleDropdown('project')" (mouseenter)="openDropdown('project')">
+        Project
+        <div *ngIf="showDropdown['project']" class="dropdown-container">
+            <div>New</div>
+            <div>Open...</div>
+            <div>Open Recent</div>
+            <div>Rename</div>
+            <div>Download</div>
             <div>See All Projects</div>
         </div>
     </div>
@@ -16,6 +18,9 @@
             <div>Copy</div>
             <div>Paste</div>
             <div>Duplicate</div>
+            <div>Delete</div>
+            <div>Undo</div>
+            <div>Redo</div>
             <div>Seleact All</div>
             <div>Group</div>
             <div>Ungroup</div>
