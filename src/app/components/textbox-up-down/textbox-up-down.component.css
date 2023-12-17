@@ -10,8 +10,6 @@ input {
   box-sizing: border-box;
   border: none;
   border-radius: 5px 0 0 5px; /* 5px border radius on the left side */
-  background-color: #4a4a68;
-  color: white;
   font-size: 18px;
   outline: none; /* Remove default input focus outline */
 }
@@ -24,12 +22,8 @@ input {
 button {
   width: 30px;
   height: 15px;
-  background-color: #6b6b99;
-  color: white;
   border: none;
   cursor: pointer;
-  font-size: 12px; /* Adjust as needed */
-  outline: none; /* Remove default button focus outline */
   padding: 0;
 }
 

@@ -2,15 +2,8 @@
   position: relative;
   width: 275px;
   max-height: 100%; /* Cannot use "fit-content" here, otherwise the animation won't work. */
-  background-color: #252531aa;
-  border: 3px solid #4a4a68;
-  border-radius: 15px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   overflow: auto;
 
-  backdrop-filter: blur(7.5px);
   transition: max-height 0.2s ease-in-out;
 }
 
@@ -21,23 +14,20 @@
   transition: max-height 0.2s ease-in-out;
 }
 
-.content-container {
+.content {
   max-height: 100%;
   padding: 0px 10px 10px 10px;
 }
 
-.title-container {
+.title {
   position: relative;
   width: fit-content;
   height: fit-content;
   padding: 1px 5px 4px 5px;
   margin: 0 auto;
-  background-color: #4a4a68;
   border-radius: 0 0 10px 10px;
 }
 
 .title-text {
-  color: #ffffff;
-  font-size: 14px;
   text-align: center;
 }
