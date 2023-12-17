@@ -62,11 +62,14 @@ caption {
   background: transparent;
 }
 
+/* Body */
 body {
   background-color: black;
   overflow: hidden;
 }
+/* Body */
 
+/* Scroll Bar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -83,7 +86,9 @@ body {
 ::-webkit-scrollbar-thumb:active {
   background-color: #6b6b99aa;
 }
+/* Scroll Bar */
 
+/* Unselectable */
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -93,26 +98,68 @@ body {
   user-select: none;
   cursor: default;
 }
+/* Unselectable */
 
-.container {
+/* Background */
+.primary-bg {
+  background-color: #4a4a68;
+}
+
+.accent-bg {
+  background-color: #6b6b99;
+}
+
+.bg1-bg {
   background-color: #252531aa;
-  backdrop-filter: blur(7.5px);
+}
 
+.bg2-bg {
+  background-color: #2f2f40aa;
+}
+
+.bg-blur {
+  backdrop-filter: blur(7.5px);
+}
+/* Background */
+
+/* Border */
+.has-border {
   border: 3px solid #4a4a68;
 
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-
-  border-radius: 15px;
 }
+/* Border */
 
-.foreground {
+/* Text */
+.text-normal {
   color: #ffffff;
-  background-color: #4a4a68;
   font-size: 16px;
 }
 
+.text-small {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.text-large {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+/* Text */
+
+/* Panel */
+.panel {
+  border-radius: 15px;
+}
+/* Panel */
+
+/* Separator */
 .separator-vertical {
   width: 4px;
   height: 100%;
@@ -128,3 +175,4 @@ body {
   border-radius: 5px;
   align-self: center;
 }
+/* Separator */
