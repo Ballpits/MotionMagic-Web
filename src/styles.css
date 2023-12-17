@@ -67,16 +67,6 @@ body {
   overflow: hidden;
 }
 
-.unselectable {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor: default;
-}
-
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -92,4 +82,30 @@ body {
 
 ::-webkit-scrollbar-thumb:active {
   background-color: #6b6b99aa;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+.separator-vertical {
+  width: 4px;
+  height: 100%;
+  background-color: #4a4a68;
+  border-radius: 5px;
+  align-self: center;
+}
+
+.separator-horizontal {
+  width: auto;
+  height: 4px;
+  background-color: #4a4a68;
+  border-radius: 5px;
+  align-self: center;
 }
