@@ -132,6 +132,15 @@ body {
 }
 /* Border */
 
+/* Path */
+path {
+  stroke: #ffffff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+/* Path */
+
 /* Text */
 .text-normal {
   color: #ffffff;
