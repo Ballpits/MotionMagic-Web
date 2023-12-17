@@ -1,9 +1,9 @@
-<div class="panel unselectable" [ngClass]="{ 'collapsed': isCollapsed }">
-    <div class="title-container unselectable" (click)="toggleCollapse()">
+<div class="panel container unselectable" [ngClass]="{ 'collapsed': isCollapsed }">
+    <div class="title foreground unselectable" (click)="toggleCollapse()">
         <div class="title-text">{{ title }}</div>
     </div>
 
-    <div class="content-container">
+    <div class="content">
         <ng-content></ng-content>
     </div>
 </div>
