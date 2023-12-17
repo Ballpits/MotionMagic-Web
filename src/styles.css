@@ -94,6 +94,19 @@ body {
   cursor: default;
 }
 
+.container {
+  background-color: #252531aa;
+  backdrop-filter: blur(7.5px);
+
+  border: 3px solid #4a4a68;
+
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  border-radius: 15px;
+}
+
 .separator-vertical {
   width: 4px;
   height: 100%;
