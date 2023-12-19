@@ -266,6 +266,8 @@ export class SimulationRendererService {
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       }
+
+      currentObject?.setCoords(); // Update canvas object location.
     });
 
     this.canvas.requestRenderAll();
