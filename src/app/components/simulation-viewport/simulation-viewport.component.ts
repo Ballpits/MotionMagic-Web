@@ -70,6 +70,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.setHeight(window.innerHeight);
     this.canvas.selectionColor = '#0080FE60';
     this.canvas.fireMiddleClick = true;
+    this.canvas.skipOffscreen = false;
 
     /* Event Handler Setup */
     this.canvas.on('mouse:down', this.mouseDownEventHandler.bind(this));
