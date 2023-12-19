@@ -14,6 +14,7 @@ import {
 
 import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
 import { RotationConverterService } from 'src/app/services/rotation-converter.service';
+import { SimulationControlSharedService } from 'src/app/services/simulation-control-shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,12 +28,16 @@ export class SimulationRendererService {
   private runner = Matter.Runner.create();
 
   private sceneObjects!: SceneObject[];
+  private physicsObjects: Matter.Body[] = [];
 
   private isSetupComplete: boolean = false;
+
+  private isRunning: boolean = false;
 
   constructor(
     private sceneObjectSharedService: SceneObjectsSharedService,
     private rotationConverterService: RotationConverterService,
+    private simulationControlSharedService: SimulationControlSharedService,
   ) {}
 
   public initialize(canvas: fabric.Canvas, engine: Matter.Engine) {
@@ -40,6 +45,7 @@ export class SimulationRendererService {
     this.engine = engine;
 
     this.sceneObjectSharedServiceSetup();
+    this.simulationControlSharedServiceSetup();
 
     this.renderLoop();
   }
@@ -58,6 +64,22 @@ export class SimulationRendererService {
           this.sceneObjectsPhysicsSetup();
         }
       });
+  }
+
+  private simulationControlSharedServiceSetup(): void {
+    this.simulationControlSharedService
+      .getIsRunning$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.isRunning !== data) {
+          this.isRunning = data;
+          console.log('running: ' + this.isRunning);
+        }
+      });
+
+    this.simulationControlSharedService.getRestartSignal$().subscribe(() => {
+      this.resetScene();
+    });
   }
 
   private sceneObjectsGraphicsSetup(): void {
@@ -128,7 +150,7 @@ export class SimulationRendererService {
   }
 
   private sceneObjectsPhysicsSetup(): void {
-    let physicsObjects: Matter.Body[] = [];
+    // let physicsObjects: Matter.Body[] = [];
 
     this.sceneObjects.forEach((element) => {
       let physicsObject!: Matter.Body;
@@ -188,19 +210,33 @@ export class SimulationRendererService {
           break;
       }
 
-      physicsObjects.push(physicsObject);
+      this.physicsObjects.push(physicsObject);
     });
 
-    Matter.World.add(this.engine.world, physicsObjects);
+    Matter.World.add(this.engine.world, this.physicsObjects);
+  }
+
+  private resetScene(): void {
+    this.isRunning = false; // Stop the simulation.
+
+    this.canvas.clear(); // Clear the viewport.
+    Matter.World.remove(this.engine.world, this.physicsObjects); // Remove all physics objects fron the world.
+    this.physicsObjects = []; // Clear the physics object list.
+
+    /* Setup the scene. */
+    this.sceneObjectsGraphicsSetup();
+    this.sceneObjectsPhysicsSetup();
   }
 
   private renderLoop() {
     const targetFPS = 60; // Set your target FPS
 
-    // Update the engine with a fixed time step
-    Matter.Runner.tick(this.runner, this.engine, 1000 / targetFPS);
+    if (this.isRunning) {
+      // Update the engine with a fixed time step
+      Matter.Runner.tick(this.runner, this.engine, 1000 / targetFPS);
 
-    this.renderMatterObjects();
+      this.renderMatterObjects();
+    }
 
     // Request animation frame for continuous rendering
     fabric.util.requestAnimFrame(() => {
