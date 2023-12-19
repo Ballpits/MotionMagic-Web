@@ -1,0 +1,10 @@
+<div class="container bg1-bg has-border bg-blur unselectable">
+    <button (click)="togglePlayPause()" [ngClass]="{'playing': isPlaying, 'paused': !isPlaying}">
+        <span *ngIf="isPlaying">Pause</span>
+        <span *ngIf="!isPlaying">Play</span>
+    </button>
+    
+    <button (click)="reset()">
+        Restart
+    </button>
+</div>

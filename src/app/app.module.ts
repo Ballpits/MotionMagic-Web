@@ -15,6 +15,7 @@ import { TextboxUpDownComponent } from './components/textbox-up-down/textbox-up-
 import { SimulationViewportComponent } from './components/simulation-viewport/simulation-viewport.component';
 import { SceneParserService } from './services/scene-parser.service';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
+import { PlayPauseControlComponent } from './components/play-pause-control/play-pause-control.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
     TextboxUpDownComponent,
     SimulationViewportComponent,
     MenuBarComponent,
+    PlayPauseControlComponent,
   ],
   imports: [
     BrowserModule,

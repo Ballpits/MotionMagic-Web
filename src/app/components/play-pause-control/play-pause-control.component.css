@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+
+  padding: 3px 10px;
+
+  border-radius: 10px;
+
+  height: 37px;
+  width: fit-content;
+}
+
+.container > * {
+  margin-right: 5px;
+
+  align-self: center;
+}
+
+.container > :last-child {
+  margin-right: 0;
+}
