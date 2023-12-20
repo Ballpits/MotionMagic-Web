@@ -91,59 +91,47 @@ export class SimulationRendererService {
           let rectangle = element as Rectangle;
 
           object = new fabric.Rect({
-            name: rectangle.id.toString(),
-
-            originX: 'center',
-            originY: 'center',
-
-            left: rectangle.position.x,
-            top: rectangle.position.y,
-
-            angle: rectangle.rotation.value,
-
             width: rectangle.dimension.width,
             height: rectangle.dimension.height,
-
-            fill: rectangle.color,
           });
+
           break;
 
         case ObjectType.Circle:
           let circle = element as Circle;
 
           object = new fabric.Circle({
-            name: circle.id.toString(),
-
-            originX: 'center',
-            originY: 'center',
-
-            left: circle.position.x,
-            top: circle.position.y,
-
             radius: circle.radius.value,
-
-            fill: circle.color,
           });
+
           break;
 
         case ObjectType.Polygon:
           let polygon = element as Polygon;
 
-          object = new fabric.Polygon(polygon.points, {
-            name: polygon.id.toString(),
+          object = new fabric.Polygon(polygon.points, {});
 
-            left: polygon.position.x,
-            top: polygon.position.x,
-
-            fill: polygon.color,
-            stroke: '#D6D08B',
-            strokeWidth: 5,
-          });
           break;
 
         default:
           break;
       }
+
+      object.set({
+        name: element.id.toString(),
+
+        originX: 'center',
+        originY: 'center',
+
+        left: element.position.x,
+        top: element.position.y,
+
+        angle: element.rotation.value,
+
+        fill: element.color,
+        stroke: '#D6D08B',
+        strokeWidth: 5,
+      });
 
       this.canvas.add(object);
     });
@@ -195,9 +183,17 @@ export class SimulationRendererService {
         case ObjectType.Polygon:
           let polygon = element as Polygon;
 
+          let shapeCenter = this.calculateBoundingBoxCenter(polygon.points);
+          let centerOfMass = Matter.Vertices.centre(polygon.points);
+
+          // Calculate the offset to align the center of mass with the bounding box center.
+          let offsetX = centerOfMass.x - shapeCenter.x;
+          let offsetY = centerOfMass.y - shapeCenter.y;
+
+          // Create the Matter.js body with the adjusted position
           physicsObject = Matter.Bodies.fromVertices(
-            polygon.position.x,
-            polygon.position.y,
+            polygon.position.x + offsetX,
+            polygon.position.y + offsetY,
             [polygon.points],
             {
               id: polygon.id,
@@ -214,6 +210,21 @@ export class SimulationRendererService {
     });
 
     Matter.World.add(this.engine.world, this.physicsObjects);
+  }
+
+  calculateBoundingBoxCenter(points: { x: number; y: number }[]): {
+    x: number;
+    y: number;
+  } {
+    const minX = Math.min(...points.map((point) => point.x));
+    const minY = Math.min(...points.map((point) => point.y));
+    const maxX = Math.max(...points.map((point) => point.x));
+    const maxY = Math.max(...points.map((point) => point.y));
+
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+
+    return { x: centerX, y: centerY };
   }
 
   private resetScene(): void {
@@ -260,9 +271,19 @@ export class SimulationRendererService {
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       } else {
+        let points = (
+          this.sceneObjects.find((obj) => obj.id === body.id) as Polygon
+        ).points;
+
+        let centerOfMass = Matter.Vertices.centre(points);
+
         currentObject!.set({
-          left: body.bounds.min.x,
-          top: body.bounds.min.y,
+          left:
+            body.position.x -
+            (centerOfMass.x - (body.bounds.max.x - body.bounds.min.x) / 2),
+          top:
+            body.position.y -
+            (centerOfMass.y - (body.bounds.max.y - body.bounds.min.y) / 2),
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       }
