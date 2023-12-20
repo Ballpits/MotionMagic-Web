@@ -111,7 +111,9 @@ export class SimulationRendererService {
       this.canvas.hoverCursor = 'move';
     } else {
       this.canvas.selection = false;
+      this.canvas.discardActiveObject();
       this.canvas.hoverCursor = 'default';
+      this.canvas.requestRenderAll(); // Refresh the canvas.
     }
   }
 
