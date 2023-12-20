@@ -47,6 +47,8 @@ export interface BaseObject {
   mass: { value: number; unit: MassUnit };
   friction: { static: number; kinetic: number };
   color: string;
+  border: string;
+  borderThickness: number;
 }
 
 export interface Rectangle extends BaseObject {
