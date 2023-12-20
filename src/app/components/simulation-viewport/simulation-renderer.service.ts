@@ -14,6 +14,8 @@ import {
 
 import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
 import { RotationConverterService } from 'src/app/services/rotation-converter.service';
+import { Mode } from 'src/app/model/modes.model';
+import { ViewportModesSharedService } from 'src/app/services/viewport-modes-shared.service';
 import { SimulationControlSharedService } from 'src/app/services/simulation-control-shared.service';
 
 @Injectable({
@@ -37,6 +39,7 @@ export class SimulationRendererService {
   constructor(
     private sceneObjectSharedService: SceneObjectsSharedService,
     private rotationConverterService: RotationConverterService,
+    private viewportModesSharedService: ViewportModesSharedService,
     private simulationControlSharedService: SimulationControlSharedService,
   ) {}
 
@@ -45,6 +48,7 @@ export class SimulationRendererService {
     this.engine = engine;
 
     this.sceneObjectSharedServiceSetup();
+    this.viewportModesSharedServiceSetup();
     this.simulationControlSharedServiceSetup();
 
     this.renderLoop();
@@ -64,6 +68,49 @@ export class SimulationRendererService {
           this.sceneObjectsPhysicsSetup();
         }
       });
+  }
+
+  private viewportModesSharedServiceSetup(): void {
+    this.viewportModesSharedService
+      .getCurrentMode$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        switch (data) {
+          case Mode.Construction:
+            console.log('Mode: Contstruction');
+            this.allowSceneObjectControl(true); // Enable controls for all scene objects.
+            break;
+
+          case Mode.States:
+            console.log('Mode: States');
+            this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+            break;
+
+          case Mode.Simulation:
+            console.log('Mode: Simulation');
+            this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+            break;
+
+          default:
+            break;
+        }
+      });
+  }
+
+  private allowSceneObjectControl(isEnabled: boolean) {
+    /* Enable or disable controls for all scene objects */
+    this.canvas.getObjects().forEach((element) => {
+      element.selectable = isEnabled;
+    });
+
+    /* Enable or disable selection on canvas and change mouse cursor */
+    if (isEnabled) {
+      this.canvas.selection = true;
+      this.canvas.hoverCursor = 'move';
+    } else {
+      this.canvas.selection = false;
+      this.canvas.hoverCursor = 'default';
+    }
   }
 
   private simulationControlSharedServiceSetup(): void {
