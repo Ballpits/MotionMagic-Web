@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { takeUntil, Subject } from 'rxjs';
+
 import { SceneParserService } from './services/scene-parser.service';
 import { SceneObjectsSharedService } from './services/scene-objects-shared.service';
 import { Scene, SceneObject } from './model/scene.model';
+import { Mode } from './model/modes.model';
+import { ViewportModesSharedService } from './services/viewport-modes-shared.service';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +13,17 @@ import { Scene, SceneObject } from './model/scene.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  private unsubscribe = new Subject<void>();
+
   private scene!: Scene;
   private sceneObjects!: SceneObject[];
+
+  public currentMode = Mode.Construction;
 
   constructor(
     private sceneParserService: SceneParserService,
     private sceneObjectsSharedService: SceneObjectsSharedService,
+    private viewportModesSharedService: ViewportModesSharedService,
   ) {}
 
   ngOnInit(): void {
@@ -30,5 +39,14 @@ export class AppComponent implements OnInit {
         console.error('Error parsing scene JSON', error);
       },
     );
+
+    this.viewportModesSharedService
+      .getCurrentMode$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (data != this.currentMode) {
+          this.currentMode = data;
+        }
+      });
   }
 }
