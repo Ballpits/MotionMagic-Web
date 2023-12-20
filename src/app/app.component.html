@@ -24,6 +24,10 @@
       <div class="menu-bar">
         <menu-bar></menu-bar>
       </div>
+
+      <div class="play-pause-control">
+        <play-pause-control *ngIf="currentMode === 'simulation'"></play-pause-control>
+      </div>
     </div>
     
     <div class="right-column">
