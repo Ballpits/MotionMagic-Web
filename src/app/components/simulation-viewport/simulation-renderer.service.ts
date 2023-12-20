@@ -78,11 +78,13 @@ export class SimulationRendererService {
         switch (data) {
           case Mode.Construction:
             console.log('Mode: Contstruction');
+            this.resetScene();
             this.allowSceneObjectControl(true); // Enable controls for all scene objects.
             break;
 
           case Mode.States:
             console.log('Mode: States');
+            this.resetScene();
             this.allowSceneObjectControl(false); // Disable controls for all scene objects.
             break;
 
