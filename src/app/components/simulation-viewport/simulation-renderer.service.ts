@@ -180,8 +180,8 @@ export class SimulationRendererService {
         angle: element.rotation.value,
 
         fill: element.color,
-        stroke: '#D6D08B',
-        strokeWidth: 5,
+        stroke: element.border,
+        strokeWidth: element.borderThickness,
       });
 
       this.canvas.add(object);
