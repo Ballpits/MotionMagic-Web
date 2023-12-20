@@ -54,7 +54,9 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
-    "color": string
+    "color": string,
+    "border": string,
+    "borderThickness": float    
 },
 ```
 
@@ -71,7 +73,9 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
-    "color": string
+    "color": string,
+    "border": string,
+    "borderThickness": float
 },
 ```
 
@@ -94,7 +98,9 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
-    "color": string
+    "color": string,
+    "border": string,
+    "borderThickness": float
 },
 ```
 
@@ -102,10 +108,10 @@ The list containing the objects in the scene.
 
 ```
 {
-  "scene_name": "MyPhysicsScene",
-  "author": "John Doe",
-  "created_at": "2023-10-25 12:00:00",
-  "last_modified_at": "2023-10-25 14:30:00",
+  "scene_name": "Test Scene",
+  "author": "UT",
+  "created_at": "2023-12-03 12:00:00",
+  "last_modified_at": "2023-12-04 14:30:00",
   "settings": {
     "gravity": { "x": 0, "y": -9.81, "unit": "m/s^2" },
     "time_step": 0.02
@@ -121,14 +127,16 @@ The list containing the objects in the scene.
       "rotation": { "value": -21, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "color": "#368BFF"
+      "color": "#368BFF",
+      "border": "#2776E6",
+      "borderThickness": 5
     },
     {
       "id": 1,
       "static": true,
       "name": "Ramp",
       "type": "polygon",
-      "position": { "x": 200, "y": 400, "unit": "cm" },
+      "position": { "x": 550, "y": 600, "unit": "cm" },
       "points": [
         { "x": 0, "y": 250 },
         { "x": 650, "y": 250 },
@@ -137,7 +145,37 @@ The list containing the objects in the scene.
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "color": "#FFFCBA"
+      "color": "#FFFCBA",
+      "border": "#D6D08B",
+      "borderThickness": 5
+    },
+    {
+      "id": 2,
+      "static": true,
+      "name": "Floor",
+      "type": "rectangle",
+      "position": { "x": 0, "y": 500, "unit": "cm" },
+      "dimension": { "width": 500, "height": 100, "unit": "cm" },
+      "rotation": { "value": 0, "unit": "deg" },
+      "mass": { "value": 0, "unit": "kg" },
+      "friction": { "static": 0.3, "kinetic": 0.2 },
+      "color": "#368BBB",
+      "border": "#2878A6",
+      "borderThickness": 5
+    },
+    {
+      "id": 3,
+      "static": false,
+      "name": "Ball",
+      "type": "circle",
+      "position": { "x": 640, "y": 0, "unit": "cm" },
+      "radius": { "value": 39.13776, "unit": "cm" },
+      "rotation": { "value": 0, "unit": "deg" },
+      "mass": { "value": 0, "unit": "kg" },
+      "friction": { "static": 0.3, "kinetic": 0.2 },
+      "color": "#CCCCFF",
+      "border": "#A6A6F7",
+      "borderThickness": 5
     }
   ]
 }
