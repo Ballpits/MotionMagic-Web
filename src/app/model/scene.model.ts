@@ -38,9 +38,8 @@ export interface Point {
 }
 
 export interface BaseObject {
-  id: number;
-  static: boolean;
   name: string;
+  static: boolean;
   type: ObjectType;
   position: Point;
   rotation: { value: number; unit: AngleUnit };
@@ -71,5 +70,5 @@ export interface Scene {
   created_at: string;
   last_modified_at: string;
   settings: SceneSettings;
-  objects: SceneObject[];
+  objects: { [key: number]: SceneObject };
 }

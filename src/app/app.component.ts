@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   private unsubscribe = new Subject<void>();
 
   private scene!: Scene;
-  private sceneObjects!: SceneObject[];
+  private sceneObjects!: Map<number, SceneObject>;
 
   public currentMode = Mode.Construction;
 
@@ -32,7 +32,12 @@ export class AppComponent implements OnInit {
     this.sceneParserService.parseSceneJson(jsonUrl).subscribe(
       (data) => {
         this.scene = data;
-        this.sceneObjects = this.scene.objects;
+        this.sceneObjects = new Map<number, SceneObject>(
+          Object.entries(this.scene.objects).map(([key, value]) => [
+            parseInt(key, 10),
+            value,
+          ]),
+        );
         this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
       },
       (error) => {
@@ -44,7 +49,7 @@ export class AppComponent implements OnInit {
       .getCurrentMode$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        if (data != this.currentMode) {
+        if (data !== this.currentMode) {
           this.currentMode = data;
         }
       });

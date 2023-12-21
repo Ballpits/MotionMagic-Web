@@ -29,7 +29,7 @@ export class SimulationRendererService {
   private engine!: Matter.Engine;
   private runner = Matter.Runner.create();
 
-  private sceneObjects!: SceneObject[];
+  private sceneObjects = new Map<number, SceneObject>();
   private physicsObjects: Matter.Body[] = [];
 
   private isSetupComplete: boolean = false;
@@ -134,7 +134,7 @@ export class SimulationRendererService {
   }
 
   private sceneObjectsGraphicsSetup(): void {
-    this.sceneObjects.forEach((element) => {
+    this.sceneObjects.forEach((element, id) => {
       let object!: fabric.Object;
 
       switch (element.type) {
@@ -169,7 +169,7 @@ export class SimulationRendererService {
       }
 
       object.set({
-        name: element.id.toString(),
+        name: id.toString(),
 
         originX: 'center',
         originY: 'center',
@@ -191,7 +191,7 @@ export class SimulationRendererService {
   private sceneObjectsPhysicsSetup(): void {
     // let physicsObjects: Matter.Body[] = [];
 
-    this.sceneObjects.forEach((element) => {
+    this.sceneObjects.forEach((element, id) => {
       let physicsObject!: Matter.Body;
 
       switch (element.type) {
@@ -204,7 +204,7 @@ export class SimulationRendererService {
             rectangle.dimension.width,
             rectangle.dimension.height,
             {
-              id: rectangle.id,
+              id: id,
               isStatic: rectangle.static,
               angle: this.rotationConverterService.degreesToRadians(
                 rectangle.rotation.value,
@@ -222,7 +222,7 @@ export class SimulationRendererService {
             circle.position.y,
             circle.radius.value,
             {
-              id: circle.id,
+              id: id,
               isStatic: circle.static,
               angle: this.rotationConverterService.degreesToRadians(
                 circle.rotation.value,
@@ -247,7 +247,7 @@ export class SimulationRendererService {
             polygon.position.y + offsetY,
             [polygon.points],
             {
-              id: polygon.id,
+              id: id,
               isStatic: polygon.static,
             },
           );
@@ -322,10 +322,7 @@ export class SimulationRendererService {
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       } else {
-        let points = (
-          this.sceneObjects.find((obj) => obj.id === body.id) as Polygon
-        ).points;
-
+        let points = (this.sceneObjects.get(body.id) as Polygon).points;
         let centerOfMass = Matter.Vertices.centre(points);
 
         currentObject!.set({

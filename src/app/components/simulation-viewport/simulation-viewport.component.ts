@@ -45,7 +45,7 @@ export class SimulationViewportComponent implements OnInit {
 
   private engine = Engine.create();
 
-  private sceneObjects!: SceneObject[];
+  private sceneObjects!: Map<number, SceneObject>;
 
   ngOnInit() {
     /* Fabric JS Setup */

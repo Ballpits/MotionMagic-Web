@@ -7,15 +7,14 @@ import { SceneObject } from '../model/scene.model';
   providedIn: 'root',
 })
 export class SceneObjectsSharedService {
-  private sceneObjects: ReplaySubject<SceneObject[]> = new ReplaySubject<
-    SceneObject[]
-  >(1);
+  private sceneObjects: ReplaySubject<Map<number, SceneObject>> =
+    new ReplaySubject<Map<number, SceneObject>>(1);
 
-  public getSceneObjects$(): Observable<SceneObject[]> {
+  public getSceneObjects$(): Observable<Map<number, SceneObject>> {
     return this.sceneObjects.asObservable();
   }
 
-  public setSceneObjects(data: SceneObject[]): void {
+  public setSceneObjects(data: Map<number, SceneObject>): void {
     this.sceneObjects.next(data);
   }
 }
