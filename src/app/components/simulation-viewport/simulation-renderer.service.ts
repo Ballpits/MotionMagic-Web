@@ -322,15 +322,20 @@ export class SimulationRendererService {
         });
       } else {
         let points = (this.sceneObjects.get(body.id) as Polygon).points;
+        let shapeCenter = this.calculateBoundingBoxCenter(points);
         let centerOfMass = Matter.Vertices.centre(points);
 
+        // Calculate the offset to align the center of mass with the bounding box center.
+        let offsetX = centerOfMass.x - shapeCenter.x;
+        let offsetY = centerOfMass.y - shapeCenter.y;
+
+        console.log(this.calculateBoundingBoxCenter(points));
+        console.log((body.bounds.max.x - body.bounds.min.x) / 2);
+        console.log((body.bounds.max.y - body.bounds.min.y) / 2);
+
         currentObject!.set({
-          left:
-            body.position.x -
-            (centerOfMass.x - (body.bounds.max.x - body.bounds.min.x) / 2),
-          top:
-            body.position.y -
-            (centerOfMass.y - (body.bounds.max.y - body.bounds.min.y) / 2),
+          left: body.position.x - offsetX,
+          top: body.position.y - offsetY,
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       }
