@@ -204,8 +204,6 @@ export class SimulationRendererService {
             rectangle.dimension.width,
             rectangle.dimension.height,
             {
-              id: id,
-              isStatic: rectangle.static,
               angle: this.rotationConverterService.degreesToRadians(
                 rectangle.rotation.value,
               ),
@@ -222,8 +220,6 @@ export class SimulationRendererService {
             circle.position.y,
             circle.radius.value,
             {
-              id: id,
-              isStatic: circle.static,
               angle: this.rotationConverterService.degreesToRadians(
                 circle.rotation.value,
               ),
@@ -246,16 +242,19 @@ export class SimulationRendererService {
             polygon.position.x + offsetX,
             polygon.position.y + offsetY,
             [polygon.points],
-            {
-              id: id,
-              isStatic: polygon.static,
-            },
+            {},
           );
           break;
 
         default:
           break;
       }
+
+      physicsObject.id = id;
+      physicsObject.isStatic = element.static;
+      physicsObject.mass = element.mass.value;
+      physicsObject.frictionStatic = element.friction.static;
+      physicsObject.friction = element.friction.kinetic;
 
       this.physicsObjects.push(physicsObject);
     });
