@@ -11,8 +11,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { fabric } from 'fabric';
 import { Engine } from 'matter-js';
 
-import { Mode } from 'src/app/model/modes.model';
-import { Rectangle, SceneObject } from 'src/app/model/scene.model';
+import {
+  Rectangle,
+  Circle,
+  Polygon,
+  SceneObject,
+} from 'src/app/model/scene.model';
 
 import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
 import { SelectedObjectPropertiesSharedService } from 'src/app/services/selected-object-properties-shared.service';
@@ -291,12 +295,10 @@ export class SimulationViewportComponent implements OnInit {
         scaledHeight,
       );
 
-      let currentObject = this.sceneObjects.get(id)!;
+      const currentObject = this.sceneObjects.get(id)!;
 
       switch (this.sceneObjects.get(id)!.type) {
         case 'rectangle':
-          currentObject = this.sceneObjects.get(id)! as Rectangle;
-
           this.sceneObjects.set(id, {
             ...currentObject,
             /* Update the position:
@@ -308,17 +310,31 @@ export class SimulationViewportComponent implements OnInit {
               y: this.selectedObject.top,
             },
             dimension: {
-              ...currentObject.dimension,
+              ...(currentObject as Rectangle).dimension,
               width: scaledWidth,
               height: scaledHeight,
             },
           } as Rectangle);
 
-          console.log(this.sceneObjects.get(id));
-
           break;
 
         case 'circle':
+          this.sceneObjects.set(id, {
+            ...currentObject,
+            /* Update the position:
+             * When the object scales, the origine changes as well.
+             */
+            position: {
+              ...currentObject.position,
+              x: this.selectedObject.left,
+              y: this.selectedObject.top,
+            },
+            radius: {
+              ...(currentObject as Circle).radius,
+              value: scaledWidth / 2,
+            },
+          } as Circle);
+
           break;
 
         case 'polygon':
