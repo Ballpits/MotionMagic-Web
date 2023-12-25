@@ -12,7 +12,7 @@ import { fabric } from 'fabric';
 import { Engine } from 'matter-js';
 
 import { Mode } from 'src/app/model/modes.model';
-import { SceneObject } from 'src/app/model/scene.model';
+import { Rectangle, SceneObject } from 'src/app/model/scene.model';
 
 import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
 import { SelectedObjectPropertiesSharedService } from 'src/app/services/selected-object-properties-shared.service';
@@ -291,10 +291,42 @@ export class SimulationViewportComponent implements OnInit {
         scaledHeight,
       );
 
-      // this.sceneObjects.set(id, {
-      //   ...this.sceneObjects.get(id)!,
-      //   dimensions: { ...this.sceneObjects.get(id)?.dimensions!, value: r },
-      // });
+      let currentObject = this.sceneObjects.get(id)!;
+
+      switch (this.sceneObjects.get(id)!.type) {
+        case 'rectangle':
+          currentObject = this.sceneObjects.get(id)! as Rectangle;
+
+          this.sceneObjects.set(id, {
+            ...currentObject,
+            /* Update the position:
+             * When the object scales, the origine changes as well.
+             */
+            position: {
+              ...currentObject.position,
+              x: this.selectedObject.left,
+              y: this.selectedObject.top,
+            },
+            dimension: {
+              ...currentObject.dimension,
+              width: scaledWidth,
+              height: scaledHeight,
+            },
+          } as Rectangle);
+
+          console.log(this.sceneObjects.get(id));
+
+          break;
+
+        case 'circle':
+          break;
+
+        case 'polygon':
+          break;
+
+        default:
+          break;
+      }
 
       this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
     }
