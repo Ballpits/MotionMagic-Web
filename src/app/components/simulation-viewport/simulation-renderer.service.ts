@@ -32,7 +32,7 @@ export class SimulationRendererService {
   private sceneObjects = new Map<number, SceneObject>();
   private physicsObjects: Matter.Body[] = [];
 
-  private isSetupComplete: boolean = false;
+  private isFirstTimeSetup: boolean = true;
 
   private isRunning: boolean = false;
 
@@ -63,9 +63,10 @@ export class SimulationRendererService {
           this.sceneObjects = data;
         }
 
-        if (!this.isSetupComplete) {
-          this.sceneObjectsGraphicsSetup();
-          this.sceneObjectsPhysicsSetup();
+        if (this.isFirstTimeSetup) {
+          this.sceneObjectsGraphicsSetup(true);
+
+          this.isFirstTimeSetup = false;
         }
       });
   }
@@ -78,19 +79,30 @@ export class SimulationRendererService {
         switch (data) {
           case Mode.Construction:
             console.log('Mode: Contstruction');
-            this.resetScene();
+
+            this.isRunning = false; // Stop the simulation.
+            this.resetGraphics();
+
             this.allowSceneObjectControl(true); // Enable controls for all scene objects.
+
             break;
 
           case Mode.States:
             console.log('Mode: States');
-            this.resetScene();
+
+            this.isRunning = false; // Stop the simulation.
+            this.resetGraphics();
+
             this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+
             break;
 
           case Mode.Simulation:
             console.log('Mode: Simulation');
+
             this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+            this.resetPhysics();
+
             break;
 
           default:
@@ -133,7 +145,7 @@ export class SimulationRendererService {
     });
   }
 
-  private sceneObjectsGraphicsSetup(): void {
+  private sceneObjectsGraphicsSetup(allowControl: boolean = false): void {
     this.sceneObjects.forEach((element, id) => {
       let object!: fabric.Object;
 
@@ -160,7 +172,10 @@ export class SimulationRendererService {
         case ObjectType.Polygon:
           let polygon = element as Polygon;
 
-          object = new fabric.Polygon(polygon.points, {});
+          object = new fabric.Polygon(polygon.points, {
+            lockRotation: true,
+            hasRotatingPoint: false,
+          });
 
           break;
 
@@ -182,6 +197,8 @@ export class SimulationRendererService {
         fill: element.color,
         stroke: element.border,
         strokeWidth: element.borderThickness,
+
+        selectable: allowControl,
       });
 
       this.canvas.add(object);
@@ -189,8 +206,6 @@ export class SimulationRendererService {
   }
 
   private sceneObjectsPhysicsSetup(): void {
-    // let physicsObjects: Matter.Body[] = [];
-
     this.sceneObjects.forEach((element, id) => {
       let physicsObject!: Matter.Body;
 
@@ -277,16 +292,23 @@ export class SimulationRendererService {
     return { x: centerX, y: centerY };
   }
 
-  private resetScene(): void {
-    this.isRunning = false; // Stop the simulation.
-
+  private resetGraphics(): void {
     this.canvas.clear(); // Clear the viewport.
+    this.sceneObjectsGraphicsSetup();
+  }
+
+  private resetPhysics(): void {
     Matter.World.remove(this.engine.world, this.physicsObjects); // Remove all physics objects fron the world.
     this.physicsObjects = []; // Clear the physics object list.
 
-    /* Setup the scene. */
-    this.sceneObjectsGraphicsSetup();
     this.sceneObjectsPhysicsSetup();
+  }
+
+  private resetScene(): void {
+    this.isRunning = false; // Stop the simulation.
+
+    this.resetGraphics();
+    this.resetPhysics();
   }
 
   private renderLoop() {
@@ -328,10 +350,6 @@ export class SimulationRendererService {
         // Calculate the offset to align the center of mass with the bounding box center.
         let offsetX = centerOfMass.x - shapeCenter.x;
         let offsetY = centerOfMass.y - shapeCenter.y;
-
-        console.log(this.calculateBoundingBoxCenter(points));
-        console.log((body.bounds.max.x - body.bounds.min.x) / 2);
-        console.log((body.bounds.max.y - body.bounds.min.y) / 2);
 
         currentObject!.set({
           left: body.position.x - offsetX,
