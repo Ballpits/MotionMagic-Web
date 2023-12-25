@@ -100,7 +100,6 @@ export class SimulationViewportComponent implements OnInit {
 
   private fabricJSObjectSetup(): void {
     fabric.Object.prototype.transparentCorners = false;
-    fabric.Object.prototype.padding = 5;
     fabric.Object.prototype.cornerSize = 7.5;
     fabric.Object.prototype.cornerColor = '#FFFFFF';
     fabric.Object.prototype.cornerStrokeColor = '#0080FE';
@@ -338,6 +337,26 @@ export class SimulationViewportComponent implements OnInit {
           break;
 
         case 'polygon':
+          this.sceneObjects.set(id, {
+            ...currentObject,
+            /* Update the position:
+             * When the object scales, the origine changes as well.
+             */
+            position: {
+              ...currentObject.position,
+              x: this.selectedObject.left,
+              y: this.selectedObject.top,
+            },
+            points: (this.selectedObject as fabric.Polygon)
+              .get('points')!
+              .map((point) => ({
+                x: this.selectedObject.left! + point.x,
+                y: this.selectedObject.top! + point.y,
+              })),
+          } as Polygon);
+
+          console.log(this.sceneObjects);
+
           break;
 
         default:
