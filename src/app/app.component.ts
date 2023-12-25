@@ -15,6 +15,7 @@ import { ViewportModesSharedService } from './services/viewport-modes-shared.ser
 export class AppComponent implements OnInit {
   private unsubscribe = new Subject<void>();
 
+  private jsonUrl = '../assets/test-scene.json';
   private scene!: Scene;
   private sceneObjects!: Map<number, SceneObject>;
 
@@ -27,9 +28,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const jsonUrl = '../assets/test-scene.json';
-
-    this.sceneParserService.parseSceneJson(jsonUrl).subscribe(
+    this.sceneParserService.parseSceneJson(this.jsonUrl).subscribe(
       (data) => {
         this.scene = data;
         this.sceneObjects = new Map<number, SceneObject>(
@@ -51,6 +50,15 @@ export class AppComponent implements OnInit {
       .subscribe((data) => {
         if (data !== this.currentMode) {
           this.currentMode = data;
+        }
+      });
+
+    this.sceneObjectsSharedService
+      .getSceneObjects$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.sceneObjects !== data) {
+          this.sceneObjects = data;
         }
       });
   }

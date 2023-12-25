@@ -244,34 +244,59 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private objectMovingEventHandler(option: any) {
-    if (this.selectedObject) {
-      this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(
-        this.selectedObject.left || 0,
-      );
+    const id: number = parseInt(this.selectedObject.name!);
+    const x: number = this.selectedObject.left || 0;
+    const y: number = this.selectedObject.top || 0;
 
-      this.selectedObjectPropertiesSharedService.setSelectedObjectTop(
-        this.selectedObject.top || 0,
-      );
+    if (this.selectedObject) {
+      this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(x);
+      this.selectedObjectPropertiesSharedService.setSelectedObjectTop(y);
+
+      this.sceneObjects.set(id, {
+        ...this.sceneObjects.get(id)!,
+        position: { x: x, y: y },
+      });
+
+      this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
     }
   }
 
   private objectRotatingEventHandler(option: any) {
+    const id: number = parseInt(this.selectedObject.name!);
+    const r: number = this.selectedObject.angle || 0;
+
     if (this.selectedObject) {
-      this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(
-        this.selectedObject.angle || 0,
-      );
+      this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(r);
+
+      this.sceneObjects.set(id, {
+        ...this.sceneObjects.get(id)!,
+        rotation: { ...this.sceneObjects.get(id)?.rotation!, value: r },
+      });
+
+      this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
     }
   }
 
   private objectScalingEventHandler(option: any) {
+    const id: number = parseInt(this.selectedObject.name!);
+    const scaledWidth: number = this.selectedObject.getScaledWidth() || 0;
+    const scaledHeight: number = this.selectedObject.getScaledHeight() || 0;
+
     if (this.selectedObject) {
       this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(
-        this.selectedObject.getScaledWidth() || 0,
+        scaledWidth,
       );
 
       this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(
-        this.selectedObject.getScaledHeight() || 0,
+        scaledHeight,
       );
+
+      // this.sceneObjects.set(id, {
+      //   ...this.sceneObjects.get(id)!,
+      //   dimensions: { ...this.sceneObjects.get(id)?.dimensions!, value: r },
+      // });
+
+      this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
     }
   }
 
