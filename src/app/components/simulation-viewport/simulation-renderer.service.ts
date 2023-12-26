@@ -197,6 +197,7 @@ export class SimulationRendererService {
         fill: element.color,
         stroke: element.border,
         strokeWidth: element.borderThickness,
+        strokeUniform: true,
 
         selectable: allowControl,
       });

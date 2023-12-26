@@ -72,6 +72,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.selectionColor = '#0080FE60';
     this.canvas.fireMiddleClick = true;
     this.canvas.skipOffscreen = false;
+    this.canvas.uniformScaling = false;
 
     /* Event Handler Setup */
     this.canvas.on('mouse:down', this.mouseDownEventHandler.bind(this));
@@ -337,25 +338,25 @@ export class SimulationViewportComponent implements OnInit {
           break;
 
         case 'polygon':
-          this.sceneObjects.set(id, {
-            ...currentObject,
-            /* Update the position:
-             * When the object scales, the origine changes as well.
-             */
-            position: {
-              ...currentObject.position,
-              x: this.selectedObject.left,
-              y: this.selectedObject.top,
-            },
-            points: (this.selectedObject as fabric.Polygon)
-              .get('points')!
-              .map((point) => ({
-                x: this.selectedObject.left! + point.x,
-                y: this.selectedObject.top! + point.y,
-              })),
-          } as Polygon);
+          // this.sceneObjects.set(id, {
+          //   ...currentObject,
+          //   /* Update the position:
+          //    * When the object scales, the origine changes as well.
+          //    */
+          //   position: {
+          //     ...currentObject.position,
+          //     x: this.selectedObject.left,
+          //     y: this.selectedObject.top,
+          //   },
+          //   points: (this.selectedObject as fabric.Polygon)
+          //     .get('points')!
+          //     .map((point) => ({
+          //       x: this.selectedObject.left! + point.x,
+          //       y: this.selectedObject.top! + point.y,
+          //     })),
+          // } as Polygon);
 
-          console.log(this.sceneObjects);
+          // console.log(this.sceneObjects);
 
           break;
 
@@ -370,6 +371,8 @@ export class SimulationViewportComponent implements OnInit {
   private updateSelectedObject() {
     this.selectedObject = this.canvas.getActiveObject()!;
     this.selectedObjectChanged.emit(this.selectedObject);
+
+    this.canvas.uniformScaling = this.selectedObject?.type === 'circle';
 
     this.updateSelectedObjectVisualProperties();
   }
