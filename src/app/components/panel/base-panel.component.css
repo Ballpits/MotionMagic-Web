@@ -8,7 +8,7 @@
 }
 
 .panel.collapsed {
-  max-height: 35px;
+  max-height: 30px;
   overflow: hidden;
 
   transition: max-height 0.2s ease-in-out;
