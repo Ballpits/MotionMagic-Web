@@ -19,7 +19,7 @@ export class SceneObjectsSharedService {
     this.sceneObjects.next(data);
   }
 
-  public getSceneObject(id: number): SceneObject | undefined {
+  public getSceneObjectById(id: number): SceneObject | undefined {
     let sceneObject: SceneObject | undefined;
 
     this.sceneObjects.pipe(take(1)).subscribe((sceneObjectMap) => {
@@ -27,6 +27,14 @@ export class SceneObjectsSharedService {
     });
 
     return sceneObject;
+  }
+
+  public setSceneObjectById(id: number, data: SceneObject): void {
+    this.sceneObjects.pipe(take(1)).subscribe((sceneObjectMap) => {
+      sceneObjectMap.set(id, data);
+
+      this.sceneObjects.next(sceneObjectMap);
+    });
   }
 
   public getSceneObjectIds() {
