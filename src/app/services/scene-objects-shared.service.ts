@@ -28,4 +28,14 @@ export class SceneObjectsSharedService {
 
     return sceneObject;
   }
+
+  public getSceneObjectIds() {
+    let sceneObjectIds: number[] = [];
+
+    this.sceneObjects.pipe(take(1)).subscribe((sceneObjectMap) => {
+      sceneObjectIds = Array.from(sceneObjectMap.keys());
+    });
+
+    return sceneObjectIds;
+  }
 }
