@@ -1,9 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { fabric } from 'fabric';
 
 import { BasePanelComponent } from './base-panel.component';
+import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
 import { SelectedObjectPropertiesSharedService } from 'src/app/services/selected-object-properties-shared.service';
+
+import {
+  SceneObject,
+  Rectangle,
+  Circle,
+  Polygon,
+} from 'src/app/model/scene.model';
 
 @Component({
   selector: 'properties-panel',
@@ -18,11 +25,12 @@ export class PropertiesPanelComponent
   extends BasePanelComponent
   implements OnInit
 {
-  @Input() selectedObject: fabric.Object = new fabric.Object();
-  @Output() selectedObjectChanged: EventEmitter<fabric.Object> =
-    new EventEmitter<fabric.Object>();
+  selectedObject?: SceneObject | undefined;
+
+  private selectedId: number = -1;
 
   constructor(
+    private sceneObjectsSharedService: SceneObjectsSharedService,
     private selectedObjectPropertiesSharedService: SelectedObjectPropertiesSharedService,
   ) {
     super();
@@ -32,58 +40,125 @@ export class PropertiesPanelComponent
 
   ngOnInit(): void {
     this.selectedObjectPropertiesSharedService
-      .getSelectedObjectLeft$()
+      .getSelectedObjectId$()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.left = data;
+      .subscribe((id) => {
+        this.selectedId = id;
+
+        this.updateSelectedObject();
       });
 
     this.selectedObjectPropertiesSharedService
-      .getSelectedObjectTop$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.top = data;
-      });
-
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectWidth$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.width = data;
-      });
-
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectHeight$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.height = data;
-      });
-
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectRotation$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        this.selectedObject.angle = data;
+      .getPropertyChangedSignal$()
+      .subscribe(() => {
+        this.updateSelectedObject();
       });
   }
 
-  updateLeft(value: number) {
+  private updateSelectedObject(): void {
+    this.selectedObject = this.sceneObjectsSharedService.getSceneObjectById(
+      this.selectedId,
+    );
+  }
+
+  private selectedObjectChanged(): void {
+    this.sceneObjectsSharedService.setSceneObjectById(
+      this.selectedId,
+      this.selectedObject!,
+    );
+  }
+
+  public getX(): number {
+    return this.selectedObject?.position?.x || 0;
+  }
+
+  public setX(value: number) {
     this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(value);
+
+    this.selectedObject = {
+      ...this.selectedObject,
+      position: {
+        ...this.selectedObject?.position,
+        x: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectChanged();
   }
 
-  updateTop(value: number) {
+  public getY(): number {
+    return this.selectedObject?.position.y || 0;
+  }
+
+  public setY(value: number) {
     this.selectedObjectPropertiesSharedService.setSelectedObjectTop(value);
+
+    this.selectedObject = {
+      ...this.selectedObject,
+      position: {
+        ...this.selectedObject?.position,
+        y: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectChanged();
   }
 
-  updateWidth(value: number) {
+  public getObjectType(): string {
+    return this.selectedObject?.type || '';
+  }
+
+  public getWidth(): number {
+    return (this.selectedObject as Rectangle)?.dimension.width || 0;
+  }
+
+  public setWidth(value: number) {
     this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(value);
+
+    this.selectedObject = {
+      ...this.selectedObject,
+      dimension: {
+        ...(this.selectedObject as Rectangle).dimension,
+        width: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectChanged();
   }
 
-  updateHeight(value: number) {
+  public getHeight(): number {
+    return (this.selectedObject as Rectangle)?.dimension.height || 0;
+  }
+
+  public setHeight(value: number) {
     this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(value);
+
+    this.selectedObject = {
+      ...this.selectedObject,
+      dimension: {
+        ...(this.selectedObject as Rectangle).dimension,
+        height: value,
+      },
+    } as SceneObject;
   }
 
-  updateRotation(value: number) {
+  public getRadius(): number {
+    return (this.selectedObject as Circle)?.radius.value || 0;
+  }
+
+  public setRadius(value: number) {
+    this.selectedObject = {
+      ...this.selectedObject,
+      radius: {
+        ...(this.selectedObject as Circle).radius,
+        value: value,
+      },
+    } as SceneObject;
+  }
+
+  public setRotation(value: number) {
+    this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(value);
+
     this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(value);
   }
 }

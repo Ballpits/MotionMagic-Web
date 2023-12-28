@@ -30,9 +30,7 @@ import { SimulationRendererService } from './simulation-renderer.service';
 export class SimulationViewportComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef;
 
-  @Input() selectedObject: fabric.Object = new fabric.Object();
-  @Output() selectedObjectChanged: EventEmitter<fabric.Object> =
-    new EventEmitter<fabric.Object>();
+  selectedObject: fabric.Object = new fabric.Object();
 
   constructor(
     private sceneObjectsSharedService: SceneObjectsSharedService,
@@ -243,7 +241,7 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private canvasSelectionClearedEventHandler(option: any) {
-    this.updateSelectedObject();
+    this.clearSelectedObject();
     console.log('Selection cleared');
   }
 
@@ -262,6 +260,7 @@ export class SimulationViewportComponent implements OnInit {
       });
 
       this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
+      this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
     }
   }
 
@@ -368,13 +367,20 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  private updateSelectedObject() {
+  private updateSelectedObject(): void {
     this.selectedObject = this.canvas.getActiveObject()!;
-    this.selectedObjectChanged.emit(this.selectedObject);
 
     this.canvas.uniformScaling = this.selectedObject?.type === 'circle';
 
+    this.selectedObjectPropertiesSharedService.setSelectedObjectId(
+      parseInt(this.selectedObject.name!),
+    );
+
     this.updateSelectedObjectVisualProperties();
+  }
+
+  private clearSelectedObject(): void {
+    this.selectedObjectPropertiesSharedService.setSelectedObjectId(-1);
   }
 
   private updateSelectedObjectVisualProperties() {

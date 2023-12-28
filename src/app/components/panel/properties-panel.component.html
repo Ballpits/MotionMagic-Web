@@ -10,7 +10,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text-XY text-normal">X:</div>
                 
-                <textbox-up-down [value]="selectedObject.left || 0" (valueChanged)="updateLeft($event)"></textbox-up-down>
+                <textbox-up-down [value]="getX()" (valueChanged)="setX($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -26,7 +26,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text-XY text-normal">Y:</div>
                 
-                <textbox-up-down [value]="selectedObject.top || 0" (valueChanged)="updateTop($event)"></textbox-up-down>
+                <textbox-up-down [value]="getY()" (valueChanged)="setY($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -41,7 +41,7 @@
 </div>
 
 <div class="panel-section-container">
-    <div class="panel-section">
+    <div *ngIf="getObjectType() == 'rectangle'" class="panel-section">
         <div class="panel-sub-section">
             <div class="section-title-text text-large font-bold">Dimensions</div>
         </div>
@@ -50,7 +50,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text text-normal">Width:</div>
                 
-                <textbox-up-down [value]="selectedObject.width || 0" (valueChanged)="updateWidth($event)"></textbox-up-down>
+                <textbox-up-down [value]="getWidth()" (valueChanged)="setWidth($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -66,7 +66,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text text-normal">Height:</div>
                 
-                <textbox-up-down [value]="selectedObject.height || 0" (valueChanged)="updateHeight($event)"></textbox-up-down>
+                <textbox-up-down [value]="0" (valueChanged)="setHeight($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="cm">cm</option>
@@ -78,6 +78,23 @@
             </div>
         </div>
     </div>
+
+    <div *ngIf="getObjectType() == 'circle'" class="panel-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Radius:</div>
+            
+            <textbox-up-down [value]="getRadius()" (valueChanged)="setRadius($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="inch">inch</option>
+                <option value="mile">mile</option>
+            </dropdown>        
+        </div>
+    </div>
+
 </div>
 
 <div class="panel-section-container">
@@ -86,7 +103,7 @@
             <div class="horizontal-stack-layout">
                 <div class="property-text text-normal">Rotation:</div>
                 
-                <textbox-up-down [value]="selectedObject.angle || 0" (valueChanged)="updateRotation($event)"></textbox-up-down>
+                <textbox-up-down [value]="0" (valueChanged)="setRotation($event)"></textbox-up-down>
                 
                 <dropdown>
                     <option value="deg">°</option>
