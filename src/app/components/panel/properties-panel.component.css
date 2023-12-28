@@ -1,17 +1,3 @@
-/* Let each big sections have gaps */
-.panel-section-container > * {
-  margin-top: 10px;
-}
-
-/* Let each sub-sections have gaps */
-.panel-section > * {
-  margin-top: 7.5px;
-}
-
-.panel-section > :first-child {
-  margin-top: 0px;
-}
-
 .horizontal-stack-layout {
   display: flex;
   align-items: center; /* Optional: align items vertically in the center */
@@ -26,8 +12,17 @@
   margin-right: 0;
 }
 
+/* Let each sub-sections have gaps */
+.panel-section > * {
+  margin-bottom: 5px;
+}
+
+.panel-section > :first-child {
+  margin-bottom: 0px;
+}
+
 .panel-section {
-  margin-top: 16px;
+  margin-bottom: 10px;
 }
 
 .panel-sub-section {
@@ -36,6 +31,7 @@
 
 .section-title-text {
   text-align: left;
+  margin-bottom: 5px;
 }
 
 .property-text {
