@@ -29,7 +29,6 @@ export class SimulationRendererService {
   private engine!: Matter.Engine;
   private runner = Matter.Runner.create();
 
-  private sceneObjects = new Map<number, SceneObject>();
   private physicsObjects: Matter.Body[] = [];
 
   private isFirstTimeSetup: boolean = true;
@@ -59,10 +58,7 @@ export class SimulationRendererService {
       .getSceneObjects$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        if (this.sceneObjects !== data) {
-          this.sceneObjects = data;
-        }
-
+        /* This is a very bad way to do initial setup, need to fix this in the future. */
         if (this.isFirstTimeSetup) {
           this.sceneObjectsGraphicsSetup(true);
 
@@ -146,10 +142,11 @@ export class SimulationRendererService {
   }
 
   private sceneObjectsGraphicsSetup(allowControl: boolean = false): void {
-    this.sceneObjects.forEach((element, id) => {
+    this.sceneObjectSharedService.getSceneObjectIds().forEach((id) => {
+      let element = this.sceneObjectSharedService.getSceneObjectById(id);
       let object!: fabric.Object;
 
-      switch (element.type) {
+      switch (element!.type) {
         case ObjectType.Rectangle:
           let rectangle = element as Rectangle;
 
@@ -189,14 +186,14 @@ export class SimulationRendererService {
         originX: 'center',
         originY: 'center',
 
-        left: element.position.x,
-        top: element.position.y,
+        left: element!.position.x,
+        top: element!.position.y,
 
-        angle: element.rotation.value,
+        angle: element!.rotation.value,
 
-        fill: element.color,
-        stroke: element.border,
-        strokeWidth: element.borderThickness,
+        fill: element!.color,
+        stroke: element!.border,
+        strokeWidth: element!.borderThickness,
         strokeUniform: true,
 
         selectable: allowControl,
@@ -207,10 +204,11 @@ export class SimulationRendererService {
   }
 
   private sceneObjectsPhysicsSetup(): void {
-    this.sceneObjects.forEach((element, id) => {
+    this.sceneObjectSharedService.getSceneObjectIds().forEach((id) => {
+      let element = this.sceneObjectSharedService.getSceneObjectById(id);
       let physicsObject!: Matter.Body;
 
-      switch (element.type) {
+      switch (element!.type) {
         case ObjectType.Rectangle:
           let rectangle = element as Rectangle;
 
@@ -267,10 +265,10 @@ export class SimulationRendererService {
       }
 
       physicsObject.id = id;
-      physicsObject.isStatic = element.static;
-      physicsObject.mass = element.mass.value;
-      physicsObject.frictionStatic = element.friction.static;
-      physicsObject.friction = element.friction.kinetic;
+      physicsObject.isStatic = element!.static;
+      physicsObject.mass = element!.mass.value;
+      physicsObject.frictionStatic = element!.friction.static;
+      physicsObject.friction = element!.friction.kinetic;
 
       this.physicsObjects.push(physicsObject);
     });
@@ -344,7 +342,9 @@ export class SimulationRendererService {
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       } else {
-        let points = (this.sceneObjects.get(body.id) as Polygon).points;
+        let points = (
+          this.sceneObjectSharedService.getSceneObjectById(body.id) as Polygon
+        ).points;
         let shapeCenter = this.calculateBoundingBoxCenter(points);
         let centerOfMass = Matter.Vertices.centre(points);
 
