@@ -30,7 +30,7 @@ import { SimulationRendererService } from './simulation-renderer.service';
 export class SimulationViewportComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef;
 
-  selectedObject: fabric.Object = new fabric.Object();
+  selectedCanvasObject: fabric.Object = new fabric.Object();
 
   constructor(
     private sceneObjectsSharedService: SceneObjectsSharedService,
@@ -118,59 +118,10 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private selectedObjectPropertiesSharedServiceSetup(): void {
-    /* X Position */
     this.selectedObjectPropertiesSharedService
-      .getSelectedObjectLeft$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        if (this.selectedObject.left !== data) {
-          this.selectedObject.set({ left: data });
-          this.canvas.renderAll();
-        }
-      });
-
-    /* Y Position */
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectTop$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        if (this.selectedObject.top !== data) {
-          this.selectedObject.set({ top: data });
-          this.canvas.renderAll();
-        }
-      });
-
-    /* Rotation */
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectRotation$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        if (this.selectedObject.angle !== data) {
-          this.selectedObject.set({ angle: data });
-          this.canvas.renderAll();
-        }
-      });
-
-    /* Width */
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectWidth$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        if (this.selectedObject.getScaledWidth() !== data) {
-          this.selectedObject.set({ width: data });
-          this.canvas.renderAll();
-        }
-      });
-
-    /* Height */
-    this.selectedObjectPropertiesSharedService
-      .getSelectedObjectHeight$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        if (this.selectedObject.getScaledHeight() !== data) {
-          this.selectedObject.set({ height: data });
-          this.canvas.renderAll();
-        }
+      .getPropertyChangedSignal$()
+      .subscribe(() => {
+        this.canvasUpdateActiveObjectVisuals();
       });
   }
 
@@ -231,65 +182,56 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private canvasSelectionCreatedEventHandler(option: any) {
-    this.updateSelectedObject();
+    this.canvasUpdateActiveObject();
     console.log('Selection created');
   }
 
   private canvasSelectionUpdatedEventHandler(option: any) {
-    this.updateSelectedObject();
+    this.canvasUpdateActiveObject();
     console.log('Selection updated');
   }
 
   private canvasSelectionClearedEventHandler(option: any) {
-    this.clearSelectedObject();
+    this.canvasClearActiveObject();
     console.log('Selection cleared');
   }
 
-  private updateSelectedObjectProperties() {
-    this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
-    this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
-  }
-
   private objectMovingEventHandler(option: any) {
-    const id: number = parseInt(this.selectedObject.name!);
-    const x: number = this.selectedObject.left || 0;
-    const y: number = this.selectedObject.top || 0;
+    const id: number = parseInt(this.selectedCanvasObject.name!);
+    const x: number = this.selectedCanvasObject.left || 0;
+    const y: number = this.selectedCanvasObject.top || 0;
 
-    if (this.selectedObject) {
-      this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(x);
-      this.selectedObjectPropertiesSharedService.setSelectedObjectTop(y);
-
+    if (this.selectedCanvasObject) {
       this.sceneObjects.set(id, {
         ...this.sceneObjects.get(id)!,
         position: { x: x, y: y },
       });
 
-      this.updateSelectedObjectProperties();
+      this.updateSelectedObject();
     }
   }
 
   private objectRotatingEventHandler(option: any) {
-    const id: number = parseInt(this.selectedObject.name!);
-    const r: number = this.selectedObject.angle || 0;
+    const id: number = parseInt(this.selectedCanvasObject.name!);
+    const r: number = this.selectedCanvasObject.angle || 0;
 
-    if (this.selectedObject) {
-      this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(r);
-
+    if (this.selectedCanvasObject) {
       this.sceneObjects.set(id, {
         ...this.sceneObjects.get(id)!,
         rotation: { ...this.sceneObjects.get(id)?.rotation!, value: r },
       });
 
-      this.updateSelectedObjectProperties();
+      this.updateSelectedObject();
     }
   }
 
   private objectScalingEventHandler(option: any) {
-    const id: number = parseInt(this.selectedObject.name!);
-    const scaledWidth: number = this.selectedObject.getScaledWidth() || 0;
-    const scaledHeight: number = this.selectedObject.getScaledHeight() || 0;
+    const id: number = parseInt(this.selectedCanvasObject.name!);
+    const scaledWidth: number = this.selectedCanvasObject.getScaledWidth() || 0;
+    const scaledHeight: number =
+      this.selectedCanvasObject.getScaledHeight() || 0;
 
-    if (this.selectedObject) {
+    if (this.selectedCanvasObject) {
       this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(
         scaledWidth,
       );
@@ -309,8 +251,8 @@ export class SimulationViewportComponent implements OnInit {
              */
             position: {
               ...currentObject.position,
-              x: this.selectedObject.left,
-              y: this.selectedObject.top,
+              x: this.selectedCanvasObject.left,
+              y: this.selectedCanvasObject.top,
             },
             dimension: {
               ...(currentObject as Rectangle).dimension,
@@ -329,8 +271,8 @@ export class SimulationViewportComponent implements OnInit {
              */
             position: {
               ...currentObject.position,
-              x: this.selectedObject.left,
-              y: this.selectedObject.top,
+              x: this.selectedCanvasObject.left,
+              y: this.selectedCanvasObject.top,
             },
             radius: {
               ...(currentObject as Circle).radius,
@@ -367,45 +309,61 @@ export class SimulationViewportComponent implements OnInit {
           break;
       }
 
-      this.updateSelectedObjectProperties();
+      this.updateSelectedObject();
     }
   }
 
-  private updateSelectedObject(): void {
-    this.selectedObject = this.canvas.getActiveObject()!;
+  private canvasUpdateActiveObject(): void {
+    this.selectedCanvasObject = this.canvas.getActiveObject()!;
 
-    this.canvas.uniformScaling = this.selectedObject?.type === 'circle';
+    this.canvas.uniformScaling = this.selectedCanvasObject?.type === 'circle';
 
     this.selectedObjectPropertiesSharedService.setSelectedObjectId(
-      parseInt(this.selectedObject.name!),
+      parseInt(this.selectedCanvasObject.name!),
     );
-
-    this.updateSelectedObjectVisualProperties();
   }
 
-  private clearSelectedObject(): void {
+  private canvasClearActiveObject(): void {
     this.selectedObjectPropertiesSharedService.setSelectedObjectId(-1);
   }
 
-  private updateSelectedObjectVisualProperties() {
-    this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(
-      this.canvas.getActiveObject()?.left || 0,
-    );
+  private updateSelectedObject() {
+    this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
+    this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
+  }
 
-    this.selectedObjectPropertiesSharedService.setSelectedObjectTop(
-      this.canvas.getActiveObject()?.top || 0,
-    );
+  private canvasUpdateActiveObjectVisuals() {
+    let id = parseInt(this.selectedCanvasObject.name!);
+    let newObject = this.sceneObjectsSharedService.getSceneObjectById(id);
+    let activeCanvasObject = this.canvas.getActiveObject();
 
-    this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(
-      this.canvas.getActiveObject()?.width || 0,
-    );
+    switch (newObject?.type) {
+      case 'rectangle':
+        activeCanvasObject?.set({
+          width: (newObject as Rectangle).dimension.width,
+          height: (newObject as Rectangle).dimension.height,
+        });
 
-    this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(
-      this.canvas.getActiveObject()?.height || 0,
-    );
+        break;
 
-    this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(
-      this.canvas.getActiveObject()?.angle || 0,
-    );
+      case 'circle':
+        (activeCanvasObject as fabric.Circle).set({
+          radius: (newObject as Circle).radius.value,
+        });
+
+        break;
+
+      /* Add polygon support in the future. */
+      // case 'polygon':
+      //   break;
+    }
+
+    activeCanvasObject?.set({
+      left: newObject?.position.x,
+      top: newObject?.position.y,
+      angle: newObject?.rotation.value,
+    });
+
+    this.canvas.requestRenderAll();
   }
 }
