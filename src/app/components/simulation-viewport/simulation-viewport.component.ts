@@ -65,28 +65,25 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.uniformScaling = false;
 
     /* Event Handler Setup */
-    this.canvas.on('mouse:down', this.mouseDownEventHandler.bind(this));
-    this.canvas.on('mouse:up', this.mouseUpEventHandler.bind(this));
-    this.canvas.on('mouse:move', this.mouseMoveEventHandler.bind(this));
-    this.canvas.on('mouse:wheel', this.mouseWheelEventHandler.bind(this));
+    this.canvas.on('mouse:down', this.mouseDownHandler.bind(this));
+    this.canvas.on('mouse:up', this.mouseUpHandler.bind(this));
+    this.canvas.on('mouse:move', this.mouseMoveHandler.bind(this));
+    this.canvas.on('mouse:wheel', this.mouseWheelHandler.bind(this));
     this.canvas.on(
       'selection:created',
-      this.canvasSelectionCreatedEventHandler.bind(this),
+      this.canvasSelectionCreatedHandler.bind(this),
     );
     this.canvas.on(
       'selection:updated',
-      this.canvasSelectionUpdatedEventHandler.bind(this),
+      this.canvasSelectionUpdatedHandler.bind(this),
     );
     this.canvas.on(
       'selection:cleared',
-      this.canvasSelectionClearedEventHandler.bind(this),
+      this.canvasSelectionClearedHandler.bind(this),
     );
-    this.canvas.on('object:moving', this.objectMovingEventHandler.bind(this));
-    this.canvas.on(
-      'object:rotating',
-      this.objectRotatingEventHandler.bind(this),
-    );
-    this.canvas.on('object:scaling', this.objectScalingEventHandler.bind(this));
+    this.canvas.on('object:moving', this.objectMovingHandler.bind(this));
+    this.canvas.on('object:rotating', this.objectRotatingHandler.bind(this));
+    this.canvas.on('object:scaling', this.objectScalingHandler.bind(this));
   }
 
   private fabricJSObjectSetup(): void {
@@ -117,7 +114,7 @@ export class SimulationViewportComponent implements OnInit {
       });
   }
 
-  private mouseDownEventHandler(option: any): void {
+  private mouseDownHandler(option: any): void {
     var event = option.e;
 
     if (option.button === 2) {
@@ -128,14 +125,14 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  private mouseUpEventHandler(option: any): void {
+  private mouseUpHandler(option: any): void {
     if (this.isPanning) {
       this.isPanning = false;
       this.canvas.selection = true;
     }
   }
 
-  private mouseMoveEventHandler(option: any): void {
+  private mouseMoveHandler(option: any): void {
     if (this.isPanning) {
       var event = option.e;
       var vpt = this.canvas.viewportTransform;
@@ -148,7 +145,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  private mouseWheelEventHandler(option: any) {
+  private mouseWheelHandler(option: any) {
     option.e.preventDefault();
     option.e.stopPropagation();
 
@@ -173,22 +170,22 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  private canvasSelectionCreatedEventHandler(option: any) {
+  private canvasSelectionCreatedHandler(option: any) {
     this.canvasUpdateActiveObject();
     console.log('Selection created');
   }
 
-  private canvasSelectionUpdatedEventHandler(option: any) {
+  private canvasSelectionUpdatedHandler(option: any) {
     this.canvasUpdateActiveObject();
     console.log('Selection updated');
   }
 
-  private canvasSelectionClearedEventHandler(option: any) {
+  private canvasSelectionClearedHandler(option: any) {
     this.canvasClearActiveObject();
     console.log('Selection cleared');
   }
 
-  private objectMovingEventHandler(option: any) {
+  private objectMovingHandler(option: any) {
     const id: number = parseInt(this.selectedCanvasObject.name!);
     const x: number = this.selectedCanvasObject.left || 0;
     const y: number = this.selectedCanvasObject.top || 0;
@@ -203,7 +200,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  private objectRotatingEventHandler(option: any) {
+  private objectRotatingHandler(option: any) {
     const id: number = parseInt(this.selectedCanvasObject.name!);
     const r: number = this.selectedCanvasObject.angle || 0;
 
@@ -217,7 +214,7 @@ export class SimulationViewportComponent implements OnInit {
     }
   }
 
-  private objectScalingEventHandler(option: any) {
+  private objectScalingHandler(option: any) {
     const id: number = parseInt(this.selectedCanvasObject.name!);
     const scaledWidth: number = this.selectedCanvasObject.getScaledWidth() || 0;
     const scaledHeight: number =
