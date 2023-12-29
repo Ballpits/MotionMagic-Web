@@ -61,7 +61,7 @@ export class PropertiesPanelComponent
     );
   }
 
-  private selectedObjectChanged(): void {
+  private selectedObjectPropertyChanged(): void {
     this.sceneObjectsSharedService.setSceneObjectById(
       this.selectedId,
       this.selectedObject!,
@@ -83,7 +83,7 @@ export class PropertiesPanelComponent
       },
     } as SceneObject;
 
-    this.selectedObjectChanged();
+    this.selectedObjectPropertyChanged();
   }
 
   public getY(): number {
@@ -101,7 +101,7 @@ export class PropertiesPanelComponent
       },
     } as SceneObject;
 
-    this.selectedObjectChanged();
+    this.selectedObjectPropertyChanged();
   }
 
   public getObjectType(): string {
@@ -123,7 +123,7 @@ export class PropertiesPanelComponent
       },
     } as SceneObject;
 
-    this.selectedObjectChanged();
+    this.selectedObjectPropertyChanged();
   }
 
   public getHeight(): number {
@@ -140,6 +140,8 @@ export class PropertiesPanelComponent
         height: value,
       },
     } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
   }
 
   public getRadius(): number {
@@ -154,11 +156,25 @@ export class PropertiesPanelComponent
         value: value,
       },
     } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
+  }
+
+  public getRotation(): number {
+    return (this.selectedObject as Circle)?.rotation.value || 0;
   }
 
   public setRotation(value: number) {
     this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(value);
 
-    this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(value);
+    this.selectedObject = {
+      ...this.selectedObject,
+      rotation: {
+        ...(this.selectedObject as Circle).rotation,
+        value: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
   }
 }
