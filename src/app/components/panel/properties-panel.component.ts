@@ -75,8 +75,6 @@ export class PropertiesPanelComponent
   }
 
   public setX(value: number) {
-    this.selectedObjectPropertiesSharedService.setSelectedObjectLeft(value);
-
     this.selectedObject = {
       ...this.selectedObject,
       position: {
@@ -93,8 +91,6 @@ export class PropertiesPanelComponent
   }
 
   public setY(value: number) {
-    this.selectedObjectPropertiesSharedService.setSelectedObjectTop(value);
-
     this.selectedObject = {
       ...this.selectedObject,
       position: {
@@ -115,8 +111,6 @@ export class PropertiesPanelComponent
   }
 
   public setWidth(value: number) {
-    this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(value);
-
     this.selectedObject = {
       ...this.selectedObject,
       dimension: {
@@ -133,8 +127,6 @@ export class PropertiesPanelComponent
   }
 
   public setHeight(value: number) {
-    this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(value);
-
     this.selectedObject = {
       ...this.selectedObject,
       dimension: {
@@ -167,8 +159,6 @@ export class PropertiesPanelComponent
   }
 
   public setRotation(value: number) {
-    this.selectedObjectPropertiesSharedService.setSelectedObjectRotation(value);
-
     this.selectedObject = {
       ...this.selectedObject,
       rotation: {
