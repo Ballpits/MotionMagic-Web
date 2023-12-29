@@ -66,6 +66,8 @@ export class PropertiesPanelComponent
       this.selectedId,
       this.selectedObject!,
     );
+
+    this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
   }
 
   public getX(): number {
