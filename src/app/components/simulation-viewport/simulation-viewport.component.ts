@@ -22,7 +22,7 @@ import { SimulationRendererService } from './simulation-renderer.service';
 export class SimulationViewportComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef;
 
-  selectedCanvasObject: fabric.Object = new fabric.Object();
+  selectedCanvasObject: fabric.Object | undefined = new fabric.Object();
 
   constructor(
     private sceneObjectsSharedService: SceneObjectsSharedService,
@@ -39,7 +39,8 @@ export class SimulationViewportComponent implements OnInit {
 
   private engine = Engine.create();
 
-  private sceneObjects!: Map<number, SceneObject>;
+  private selectedObject?: SceneObject | undefined;
+  private selectedId: number = -1;
 
   ngOnInit() {
     /* Fabric JS Setup */
@@ -47,7 +48,6 @@ export class SimulationViewportComponent implements OnInit {
     this.fabricJSObjectSetup();
 
     /* Shared Service Setup */
-    this.sceneObjectSharedServiceSetup();
     this.selectedObjectPropertiesSharedServiceSetup();
 
     /* Renderer Setup */
@@ -93,17 +93,6 @@ export class SimulationViewportComponent implements OnInit {
     fabric.Object.prototype.cornerStrokeColor = '#0080FE';
     fabric.Object.prototype.cornerStyle = 'circle';
     fabric.Object.prototype.borderColor = '#0080FE';
-  }
-
-  private sceneObjectSharedServiceSetup(): void {
-    this.sceneObjectsSharedService
-      .getSceneObjects$()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((data) => {
-        if (this.sceneObjects !== data) {
-          this.sceneObjects = data;
-        }
-      });
   }
 
   private selectedObjectPropertiesSharedServiceSetup(): void {
@@ -186,173 +175,189 @@ export class SimulationViewportComponent implements OnInit {
   }
 
   private objectMovingHandler(option: any) {
-    const id: number = parseInt(this.selectedCanvasObject.name!);
-    const x: number = this.selectedCanvasObject.left || 0;
-    const y: number = this.selectedCanvasObject.top || 0;
-
     if (this.selectedCanvasObject) {
-      this.sceneObjects.set(id, {
-        ...this.sceneObjects.get(id)!,
-        position: { x: x, y: y },
-      });
+      const x: number = this.selectedCanvasObject.left || 0;
+      const y: number = this.selectedCanvasObject.top || 0;
 
-      this.updateSelectedObject();
+      this.selectedObject = {
+        ...this.selectedObject,
+        position: {
+          ...this.selectedObject?.position,
+          x: x,
+          y: y,
+        },
+      } as SceneObject;
+
+      this.selectedObjectPropertyChanged();
     }
   }
 
   private objectRotatingHandler(option: any) {
-    const id: number = parseInt(this.selectedCanvasObject.name!);
-    const r: number = this.selectedCanvasObject.angle || 0;
-
     if (this.selectedCanvasObject) {
-      this.sceneObjects.set(id, {
-        ...this.sceneObjects.get(id)!,
-        rotation: { ...this.sceneObjects.get(id)?.rotation!, value: r },
-      });
+      const r: number = this.selectedCanvasObject.angle || 0;
 
-      this.updateSelectedObject();
+      this.selectedObject = {
+        ...this.selectedObject,
+        rotation: {
+          ...(this.selectedObject as Circle).rotation,
+          value: r,
+        },
+      } as SceneObject;
+
+      this.selectedObjectPropertyChanged();
     }
   }
 
   private objectScalingHandler(option: any) {
-    const id: number = parseInt(this.selectedCanvasObject.name!);
-    const scaledWidth: number = this.selectedCanvasObject.getScaledWidth() || 0;
-    const scaledHeight: number =
-      this.selectedCanvasObject.getScaledHeight() || 0;
-
     if (this.selectedCanvasObject) {
-      this.selectedObjectPropertiesSharedService.setSelectedObjectWidth(
-        scaledWidth,
-      );
+      const id: number = parseInt(this.selectedCanvasObject.name!);
+      const scaledWidth: number =
+        this.selectedCanvasObject.getScaledWidth() || 0;
+      const scaledHeight: number =
+        this.selectedCanvasObject.getScaledHeight() || 0;
 
-      this.selectedObjectPropertiesSharedService.setSelectedObjectHeight(
-        scaledHeight,
-      );
+      if (this.selectedCanvasObject) {
+        switch (this.selectedObject!.type) {
+          case 'rectangle':
+            this.selectedObject = {
+              ...this.selectedObject,
+              /* Update the position:
+               * When the object scales, the origine changes as well.
+               */
+              position: {
+                ...this.selectedObject!.position,
+                x: this.selectedCanvasObject.left,
+                y: this.selectedCanvasObject.top,
+              },
+              dimension: {
+                ...(this.selectedObject as Rectangle).dimension,
+                width: scaledWidth,
+                height: scaledHeight,
+              },
+            } as Rectangle;
 
-      const currentObject = this.sceneObjects.get(id)!;
+            break;
 
-      switch (this.sceneObjects.get(id)!.type) {
-        case 'rectangle':
-          this.sceneObjects.set(id, {
-            ...currentObject,
-            /* Update the position:
-             * When the object scales, the origine changes as well.
-             */
-            position: {
-              ...currentObject.position,
-              x: this.selectedCanvasObject.left,
-              y: this.selectedCanvasObject.top,
-            },
-            dimension: {
-              ...(currentObject as Rectangle).dimension,
-              width: scaledWidth,
-              height: scaledHeight,
-            },
-          } as Rectangle);
+          case 'circle':
+            this.selectedObject = {
+              ...this.selectedObject,
+              /* Update the position:
+               * When the object scales, the origine changes as well.
+               */
+              position: {
+                ...this.selectedObject!.position,
+                x: this.selectedCanvasObject.left,
+                y: this.selectedCanvasObject.top,
+              },
+              radius: {
+                ...(this.selectedObject as Circle).radius,
+                value: scaledWidth / 2,
+              },
+            } as SceneObject;
 
-          break;
+            break;
 
-        case 'circle':
-          this.sceneObjects.set(id, {
-            ...currentObject,
-            /* Update the position:
-             * When the object scales, the origine changes as well.
-             */
-            position: {
-              ...currentObject.position,
-              x: this.selectedCanvasObject.left,
-              y: this.selectedCanvasObject.top,
-            },
-            radius: {
-              ...(currentObject as Circle).radius,
-              value: scaledWidth / 2,
-            },
-          } as Circle);
+          case 'polygon':
+            // this.sceneObjects.set(id, {
+            //   ...currentObject,
+            //   /* Update the position:
+            //    * When the object scales, the origine changes as well.
+            //    */
+            //   position: {
+            //     ...currentObject.position,
+            //     x: this.selectedObject.left,
+            //     y: this.selectedObject.top,
+            //   },
+            //   points: (this.selectedObject as fabric.Polygon)
+            //     .get('points')!
+            //     .map((point) => ({
+            //       x: this.selectedObject.left! + point.x,
+            //       y: this.selectedObject.top! + point.y,
+            //     })),
+            // } as Polygon);
 
-          break;
+            // console.log(this.sceneObjects);
 
-        case 'polygon':
-          // this.sceneObjects.set(id, {
-          //   ...currentObject,
-          //   /* Update the position:
-          //    * When the object scales, the origine changes as well.
-          //    */
-          //   position: {
-          //     ...currentObject.position,
-          //     x: this.selectedObject.left,
-          //     y: this.selectedObject.top,
-          //   },
-          //   points: (this.selectedObject as fabric.Polygon)
-          //     .get('points')!
-          //     .map((point) => ({
-          //       x: this.selectedObject.left! + point.x,
-          //       y: this.selectedObject.top! + point.y,
-          //     })),
-          // } as Polygon);
+            break;
 
-          // console.log(this.sceneObjects);
+          default:
+            break;
+        }
 
-          break;
-
-        default:
-          break;
+        this.selectedObjectPropertyChanged();
       }
-
-      this.updateSelectedObject();
     }
   }
 
   private canvasUpdateActiveObject(): void {
     this.selectedCanvasObject = this.canvas.getActiveObject()!;
+    this.selectedId = parseInt(this.selectedCanvasObject!.name!);
+    this.updateSelectedObject();
 
     this.canvas.uniformScaling = this.selectedCanvasObject?.type === 'circle';
 
     this.selectedObjectPropertiesSharedService.setSelectedObjectId(
-      parseInt(this.selectedCanvasObject.name!),
+      this.selectedId,
     );
   }
 
   private canvasClearActiveObject(): void {
+    this.selectedId = -1;
+    this.updateSelectedObject();
+
     this.selectedObjectPropertiesSharedService.setSelectedObjectId(-1);
   }
 
-  private updateSelectedObject() {
-    this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
+  private updateSelectedObject(): void {
+    this.selectedObject = this.sceneObjectsSharedService.getSceneObjectById(
+      this.selectedId,
+    );
+  }
+
+  private selectedObjectPropertyChanged(): void {
+    this.sceneObjectsSharedService.setSceneObjectById(
+      this.selectedId,
+      this.selectedObject!,
+    );
+
     this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
   }
 
   private canvasUpdateActiveObjectVisuals() {
-    let id = parseInt(this.selectedCanvasObject.name!);
+    let id = parseInt(this.selectedCanvasObject!.name!);
     let newObject = this.sceneObjectsSharedService.getSceneObjectById(id);
-    let activeCanvasObject = this.canvas.getActiveObject();
 
-    switch (newObject?.type) {
-      case 'rectangle':
-        activeCanvasObject?.set({
-          width: (newObject as Rectangle).dimension.width,
-          height: (newObject as Rectangle).dimension.height,
-        });
+    if (newObject !== this.selectedObject) {
+      let activeCanvasObject = this.canvas.getActiveObject();
 
-        break;
+      switch (newObject?.type) {
+        case 'rectangle':
+          activeCanvasObject?.set({
+            width: (newObject as Rectangle).dimension.width,
+            height: (newObject as Rectangle).dimension.height,
+          });
 
-      case 'circle':
-        (activeCanvasObject as fabric.Circle).set({
-          radius: (newObject as Circle).radius.value,
-        });
+          break;
 
-        break;
+        case 'circle':
+          (activeCanvasObject as fabric.Circle).set({
+            radius: (newObject as Circle).radius.value,
+          });
 
-      /* Add polygon support in the future. */
-      // case 'polygon':
-      //   break;
+          break;
+
+        /* Add polygon support in the future. */
+        // case 'polygon':
+        //   break;
+      }
+
+      activeCanvasObject?.set({
+        left: newObject?.position.x,
+        top: newObject?.position.y,
+        angle: newObject?.rotation.value,
+      });
+
+      this.canvas.requestRenderAll();
     }
-
-    activeCanvasObject?.set({
-      left: newObject?.position.x,
-      top: newObject?.position.y,
-      angle: newObject?.rotation.value,
-    });
-
-    this.canvas.requestRenderAll();
   }
 }
