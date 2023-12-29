@@ -245,6 +245,11 @@ export class SimulationViewportComponent implements OnInit {
     console.log('Selection cleared');
   }
 
+  private updateSelectedObjectProperties() {
+    this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
+    this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
+  }
+
   private objectMovingEventHandler(option: any) {
     const id: number = parseInt(this.selectedObject.name!);
     const x: number = this.selectedObject.left || 0;
@@ -259,8 +264,7 @@ export class SimulationViewportComponent implements OnInit {
         position: { x: x, y: y },
       });
 
-      this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
-      this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
+      this.updateSelectedObjectProperties();
     }
   }
 
@@ -276,7 +280,7 @@ export class SimulationViewportComponent implements OnInit {
         rotation: { ...this.sceneObjects.get(id)?.rotation!, value: r },
       });
 
-      this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
+      this.updateSelectedObjectProperties();
     }
   }
 
@@ -363,7 +367,7 @@ export class SimulationViewportComponent implements OnInit {
           break;
       }
 
-      this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
+      this.updateSelectedObjectProperties();
     }
   }
 
