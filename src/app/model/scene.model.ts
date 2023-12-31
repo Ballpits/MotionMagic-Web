@@ -17,6 +17,14 @@ export enum MassUnit {
   Pound = 'lb',
 }
 
+export enum LinearVelocityUnit {
+  MeterPerSecond = 'm/s',
+  KilometerPerHour = 'km/h',
+  MilePerHour = 'mph',
+  FeetPerSecond = 'ft/s',
+  Knot = 'kn',
+}
+
 export enum AccelerationUnit {
   MeterPerSecondSquared = 'm/s^2',
 }
@@ -45,6 +53,7 @@ export interface BaseObject {
   rotation: { value: number; unit: AngleUnit };
   mass: { value: number; unit: MassUnit };
   friction: { static: number; kinetic: number };
+  linear_velocity: { x: number; y: number; unit: LinearVelocityUnit };
   color: string;
   border: string;
   borderThickness: number;
