@@ -61,7 +61,7 @@ export class PropertiesPanelComponent
       this.selectedId,
     );
 
-    console.log(this.selectedObject);
+    console.log(this.selectedObject?.rotation?.value);
   }
 
   private selectedObjectPropertyChanged(): void {
@@ -90,7 +90,7 @@ export class PropertiesPanelComponent
   }
 
   public getY(): number {
-    return this.selectedObject?.position.y || 0;
+    return this.selectedObject?.position?.y || 0;
   }
 
   public setY(value: number) {
@@ -158,14 +158,14 @@ export class PropertiesPanelComponent
   }
 
   public getRotation(): number {
-    return (this.selectedObject as Circle)?.rotation.value || 0;
+    return this.selectedObject?.rotation.value || 0;
   }
 
   public setRotation(value: number) {
     this.selectedObject = {
       ...this.selectedObject,
       rotation: {
-        ...(this.selectedObject as Circle).rotation,
+        ...this.selectedObject?.rotation,
         value: value,
       },
     } as SceneObject;
@@ -174,7 +174,7 @@ export class PropertiesPanelComponent
   }
 
   public getStaticFriction(): number {
-    return this.selectedObject?.friction.static || 0;
+    return this.selectedObject?.friction?.static || 0;
   }
 
   public setStaticFriction(value: number) {
@@ -190,7 +190,7 @@ export class PropertiesPanelComponent
   }
 
   public getKineticFriction(): number {
-    return this.selectedObject?.friction.kinetic || 0;
+    return this.selectedObject?.friction?.kinetic || 0;
   }
 
   public setKineticFriction(value: number) {
@@ -206,12 +206,10 @@ export class PropertiesPanelComponent
   }
 
   public getLinearVelocityX(): number {
-    return this.selectedObject?.linearVelocity.x || 0;
+    return this.selectedObject?.linearVelocity?.x || 0;
   }
 
   public setLinearVelocityX(value: number) {
-    console.log(value);
-
     this.selectedObject = {
       ...this.selectedObject,
       linearVelocity: {
@@ -224,7 +222,7 @@ export class PropertiesPanelComponent
   }
 
   public getLinearVelocityY(): number {
-    return this.selectedObject?.linearVelocity.y || 0;
+    return this.selectedObject?.linearVelocity?.y || 0;
   }
 
   public setLinearVelocityY(value: number) {
