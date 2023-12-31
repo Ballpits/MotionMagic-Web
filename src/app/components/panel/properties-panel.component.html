@@ -112,7 +112,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text text-normal">Mass:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getMass()" (valueChanged)="setMass($event)"></textbox-up-down>
             
             <dropdown>
                 <option value="g">g</option>

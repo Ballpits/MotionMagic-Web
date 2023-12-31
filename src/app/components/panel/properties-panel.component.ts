@@ -61,7 +61,7 @@ export class PropertiesPanelComponent
       this.selectedId,
     );
 
-    console.log(this.selectedObject?.rotation?.value);
+    console.log(this.selectedObject?.linearVelocity);
   }
 
   private selectedObjectPropertyChanged(): void {
@@ -166,6 +166,22 @@ export class PropertiesPanelComponent
       ...this.selectedObject,
       rotation: {
         ...this.selectedObject?.rotation,
+        value: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
+  }
+
+  public getMass(): number {
+    return this.selectedObject?.mass?.value || 0;
+  }
+
+  public setMass(value: number) {
+    this.selectedObject = {
+      ...this.selectedObject,
+      mass: {
+        ...this.selectedObject?.mass,
         value: value,
       },
     } as SceneObject;
