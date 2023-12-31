@@ -17,7 +17,7 @@
       "rotation": { "value": -21, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#368BFF",
       "border": "#2776E6",
       "borderThickness": 5
@@ -35,7 +35,7 @@
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#FFFCBA",
       "border": "#D6D08B",
       "borderThickness": 5
@@ -49,7 +49,7 @@
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#368BBB",
       "border": "#2878A6",
       "borderThickness": 5
@@ -63,7 +63,7 @@
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#CCCCFF",
       "border": "#A6A6F7",
       "borderThickness": 5

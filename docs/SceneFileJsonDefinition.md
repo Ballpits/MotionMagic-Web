@@ -54,7 +54,7 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
-    "linear_velocity": { "x": float, "y": float, "unit": string },
+    "linearVelocity": { "x": float, "y": float, "unit": string },
     "color": string,
     "border": string,
     "borderThickness": float    
@@ -74,7 +74,7 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
-    "linear_velocity": { "x": float, "y": float, "unit": string },
+    "linearVelocity": { "x": float, "y": float, "unit": string },
     "color": string,
     "border": string,
     "borderThickness": float
@@ -98,7 +98,7 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
-    "linear_velocity": { "x": float, "y": float, "unit": string },
+    "linearVelocity": { "x": float, "y": float, "unit": string },
     "color": string,
     "border": string,
     "borderThickness": float
@@ -127,7 +127,7 @@ The list containing the objects in the scene.
       "rotation": { "value": -21, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#368BFF",
       "border": "#2776E6",
       "borderThickness": 5
@@ -145,7 +145,7 @@ The list containing the objects in the scene.
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#FFFCBA",
       "border": "#D6D08B",
       "borderThickness": 5
@@ -159,7 +159,7 @@ The list containing the objects in the scene.
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#368BBB",
       "border": "#2878A6",
       "borderThickness": 5
@@ -173,7 +173,7 @@ The list containing the objects in the scene.
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
-      "linear_velocity": { "x": 0, "y": 0, "unit": "m/s" },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#CCCCFF",
       "border": "#A6A6F7",
       "borderThickness": 5

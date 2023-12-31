@@ -53,7 +53,7 @@ export interface BaseObject {
   rotation: { value: number; unit: AngleUnit };
   mass: { value: number; unit: MassUnit };
   friction: { static: number; kinetic: number };
-  linear_velocity: { x: number; y: number; unit: LinearVelocityUnit };
+  linearVelocity: { x: number; y: number; unit: LinearVelocityUnit };
   color: string;
   border: string;
   borderThickness: number;
