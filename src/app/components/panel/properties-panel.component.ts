@@ -56,9 +56,12 @@ export class PropertiesPanelComponent
   }
 
   private updateSelectedObject(): void {
+    /* Fetch the most up-to-date version of the selected object. */
     this.selectedObject = this.sceneObjectsSharedService.getSceneObjectById(
       this.selectedId,
     );
+
+    console.log(this.selectedObject);
   }
 
   private selectedObjectPropertyChanged(): void {
@@ -164,6 +167,72 @@ export class PropertiesPanelComponent
       rotation: {
         ...(this.selectedObject as Circle).rotation,
         value: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
+  }
+
+  public getStaticFriction(): number {
+    return this.selectedObject?.friction.static || 0;
+  }
+
+  public setStaticFriction(value: number) {
+    this.selectedObject = {
+      ...this.selectedObject,
+      friction: {
+        ...this.selectedObject?.friction,
+        static: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
+  }
+
+  public getKineticFriction(): number {
+    return this.selectedObject?.friction.kinetic || 0;
+  }
+
+  public setKineticFriction(value: number) {
+    this.selectedObject = {
+      ...this.selectedObject,
+      friction: {
+        ...this.selectedObject?.friction,
+        kinetic: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
+  }
+
+  public getLinearVelocityX(): number {
+    return this.selectedObject?.linearVelocity.x || 0;
+  }
+
+  public setLinearVelocityX(value: number) {
+    console.log(value);
+
+    this.selectedObject = {
+      ...this.selectedObject,
+      linearVelocity: {
+        ...this.selectedObject?.linearVelocity,
+        x: value,
+      },
+    } as SceneObject;
+
+    this.selectedObjectPropertyChanged();
+  }
+
+  public getLinearVelocityY(): number {
+    return this.selectedObject?.linearVelocity.y || 0;
+  }
+
+  public setLinearVelocityY(value: number) {
+    this.selectedObject = {
+      ...this.selectedObject,
+      linearVelocity: {
+        ...this.selectedObject?.linearVelocity,
+        y: value,
       },
     } as SceneObject;
 

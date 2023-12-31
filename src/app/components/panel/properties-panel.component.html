@@ -132,7 +132,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text text-normal">Static:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getStaticFriction()" (valueChanged)="setStaticFriction($event)"></textbox-up-down>
         </div>
     </div>
     
@@ -140,7 +140,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text text-normal">Kinetic:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getKineticFriction()" (valueChanged)="setKineticFriction($event)"></textbox-up-down>
         </div>
     </div>
 </div>
@@ -154,7 +154,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text-XY text-normal">X:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getLinearVelocityX()" (valueChanged)="setLinearVelocityX($event)"></textbox-up-down>
             
             <dropdown>
                 <option value="ms">m/s</option>
@@ -168,7 +168,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text-XY text-normal">Y:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getLinearVelocityY()" (valueChanged)="setLinearVelocityY($event)"></textbox-up-down>
             
             <dropdown>
                 <option value="ms">m/s</option>
