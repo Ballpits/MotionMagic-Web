@@ -270,6 +270,11 @@ export class SimulationRendererService {
       physicsObject.frictionStatic = element!.friction.static;
       physicsObject.friction = element!.friction.kinetic;
 
+      Matter.Body.setVelocity(physicsObject, {
+        x: element!.linearVelocity.x,
+        y: element!.linearVelocity.y,
+      });
+
       this.physicsObjects.push(physicsObject);
     });
 
