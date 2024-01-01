@@ -23,10 +23,4 @@ export class TextboxUpDownComponent {
     this.value--;
     this.updateValue();
   }
-
-  onKeyPressEventHandler(event: any): void {
-    if (event.key === 'Enter') {
-      this.updateValue();
-    }
-  }
 }

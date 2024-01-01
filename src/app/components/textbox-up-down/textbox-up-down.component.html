@@ -1,5 +1,5 @@
 <div class="textbox-container" [style.width]="width">
-  <input class="primary-bg text-normal" type="text" [(ngModel)]="value" (focusout)="updateValue()" (keypress)="onKeyPressEventHandler($event)"/>
+  <input class="primary-bg text-normal" type="text" [(ngModel)]="value" (input)="updateValue()"/>
   <div class="buttons">
     <button class="accent-bg" (click)="increment()">
       <svg xmlns="http://www.w3.org/2000/svg" width="17.719" height="8.326" viewBox="0 0 17.719 8.326">
