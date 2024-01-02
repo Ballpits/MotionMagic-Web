@@ -56,12 +56,14 @@ export class PropertiesPanelComponent
   }
 
   private updateSelectedObject(): void {
-    /* Fetch the most up-to-date version of the selected object. */
-    this.selectedObject = this.sceneObjectsSharedService.getSceneObjectById(
+    let newObject = this.sceneObjectsSharedService.getSceneObjectById(
       this.selectedId,
     );
 
-    console.log(this.selectedObject?.linearVelocity);
+    if (newObject !== this.selectedObject) {
+      // Fetch the most up-to-date version of the selected object.
+      this.selectedObject = newObject;
+    }
   }
 
   private selectedObjectPropertyChanged(): void {
@@ -73,8 +75,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
   }
 
-  public getX(): number {
-    return this.selectedObject?.position?.x || 0;
+  public getX(): string {
+    return (this.selectedObject?.position?.x || 0).toString();
   }
 
   public setX(value: number) {
@@ -89,8 +91,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getY(): number {
-    return this.selectedObject?.position?.y || 0;
+  public getY(): string {
+    return (this.selectedObject?.position?.y || 0).toString();
   }
 
   public setY(value: number) {
@@ -109,8 +111,10 @@ export class PropertiesPanelComponent
     return this.selectedObject?.type || '';
   }
 
-  public getWidth(): number {
-    return (this.selectedObject as Rectangle)?.dimension.width || 0;
+  public getWidth(): string {
+    return (
+      (this.selectedObject as Rectangle)?.dimension.width || 0
+    ).toString();
   }
 
   public setWidth(value: number) {
@@ -125,8 +129,10 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getHeight(): number {
-    return (this.selectedObject as Rectangle)?.dimension.height || 0;
+  public getHeight(): string {
+    return (
+      (this.selectedObject as Rectangle)?.dimension.height || 0
+    ).toString();
   }
 
   public setHeight(value: number) {
@@ -141,8 +147,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getRadius(): number {
-    return (this.selectedObject as Circle)?.radius.value || 0;
+  public getRadius(): string {
+    return ((this.selectedObject as Circle)?.radius.value || 0).toString();
   }
 
   public setRadius(value: number) {
@@ -157,8 +163,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getRotation(): number {
-    return this.selectedObject?.rotation.value || 0;
+  public getRotation(): string {
+    return (this.selectedObject?.rotation?.value || 0).toString();
   }
 
   public setRotation(value: number) {
@@ -173,8 +179,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getMass(): number {
-    return this.selectedObject?.mass?.value || 0;
+  public getMass(): string {
+    return (this.selectedObject?.mass?.value || 0).toString();
   }
 
   public setMass(value: number) {
@@ -189,8 +195,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getStaticFriction(): number {
-    return this.selectedObject?.friction?.static || 0;
+  public getStaticFriction(): string {
+    return (this.selectedObject?.friction?.static || 0).toString();
   }
 
   public setStaticFriction(value: number) {
@@ -205,8 +211,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getKineticFriction(): number {
-    return this.selectedObject?.friction?.kinetic || 0;
+  public getKineticFriction(): string {
+    return (this.selectedObject?.friction?.kinetic || 0).toString();
   }
 
   public setKineticFriction(value: number) {
@@ -221,8 +227,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getLinearVelocityX(): number {
-    return this.selectedObject?.linearVelocity?.x || 0;
+  public getLinearVelocityX(): string {
+    return (this.selectedObject?.linearVelocity?.x || 0).toString();
   }
 
   public setLinearVelocityX(value: number) {
@@ -237,8 +243,8 @@ export class PropertiesPanelComponent
     this.selectedObjectPropertyChanged();
   }
 
-  public getLinearVelocityY(): number {
-    return this.selectedObject?.linearVelocity?.y || 0;
+  public getLinearVelocityY(): string {
+    return (this.selectedObject?.linearVelocity?.y || 0).toString();
   }
 
   public setLinearVelocityY(value: number) {
