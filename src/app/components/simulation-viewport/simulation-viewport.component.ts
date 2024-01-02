@@ -357,6 +357,8 @@ export class SimulationViewportComponent implements OnInit {
         angle: newObject?.rotation.value,
       });
 
+      this.selectedObject = newObject;
+
       this.canvas.requestRenderAll();
     }
   }
