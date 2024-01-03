@@ -13,10 +13,10 @@ import {
 })
 export class TextboxUpDownComponent {
   @Input() public width: string = '100%';
-  @Input() protected _value!: string;
   @Output() public valueChanged = new EventEmitter<number>();
 
-  private previousValue!: string; // Used to store the previous valid value.
+  protected _value: string = '';
+  private previousValue: string = ''; // Used to store the previous valid value.
 
   @Input()
   set value(newValue: string) {
