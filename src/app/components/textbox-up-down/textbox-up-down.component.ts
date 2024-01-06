@@ -6,6 +6,8 @@ import {
   HostListener,
 } from '@angular/core';
 
+import { ViewportEventSharedService } from 'src/app/services/viewport-event-shared-service';
+
 @Component({
   selector: 'textbox-up-down',
   templateUrl: './textbox-up-down.component.html',
@@ -17,6 +19,14 @@ export class TextboxUpDownComponent {
 
   protected _value: string = '';
   private previousValue: string = ''; // Used to store the previous valid value.
+
+  constructor(private viewportEventSharedService: ViewportEventSharedService) {}
+
+  ngOnInit(): void {
+    this.viewportEventSharedService.getBeforeClickSignal$().subscribe(() => {
+      this.updateValue();
+    });
+  }
 
   @Input()
   set value(newValue: string) {
@@ -33,6 +43,13 @@ export class TextboxUpDownComponent {
     event.preventDefault();
 
     this.updateValue();
+  }
+
+  @HostListener('keydown.escape', ['$event'])
+  onEscape(event: KeyboardEvent): void {
+    event.preventDefault();
+
+    this._value = this.previousValue;
   }
 
   @HostListener('blur', ['$event'])

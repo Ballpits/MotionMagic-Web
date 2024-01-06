@@ -13,6 +13,7 @@ import {
 import { SceneObjectsSharedService } from 'src/app/services/scene-objects-shared.service';
 import { SelectedObjectPropertiesSharedService } from 'src/app/services/selected-object-properties-shared.service';
 import { SimulationRendererService } from './simulation-renderer.service';
+import { ViewportEventSharedService } from 'src/app/services/viewport-event-shared-service';
 
 @Component({
   selector: 'simulation-viewport',
@@ -28,9 +29,8 @@ export class SimulationViewportComponent implements OnInit {
     private sceneObjectsSharedService: SceneObjectsSharedService,
     private selectedObjectPropertiesSharedService: SelectedObjectPropertiesSharedService,
     private simulationRendererService: SimulationRendererService,
+    private viewportEventSharedService: ViewportEventSharedService,
   ) {}
-
-  private unsubscribe = new Subject<void>();
 
   private canvas!: fabric.Canvas;
   private isPanning: boolean = false;
@@ -65,6 +65,7 @@ export class SimulationViewportComponent implements OnInit {
     this.canvas.uniformScaling = false;
 
     /* Event Handler Setup */
+    this.canvas.on('mouse:down:before', this.beforeMouseDownHandler.bind(this));
     this.canvas.on('mouse:down', this.mouseDownHandler.bind(this));
     this.canvas.on('mouse:up', this.mouseUpHandler.bind(this));
     this.canvas.on('mouse:move', this.mouseMoveHandler.bind(this));
@@ -101,6 +102,10 @@ export class SimulationViewportComponent implements OnInit {
       .subscribe(() => {
         this.canvasUpdateActiveObjectVisuals();
       });
+  }
+
+  private beforeMouseDownHandler(option: any): void {
+    this.viewportEventSharedService.sendBeforeClickSignal();
   }
 
   private mouseDownHandler(option: any): void {
