@@ -67,12 +67,14 @@ export class PropertiesPanelComponent
   }
 
   private selectedObjectPropertyChanged(): void {
-    this.sceneObjectsSharedService.setSceneObjectById(
-      this.selectedId,
-      this.selectedObject!,
-    );
+    if (this.selectedId !== -1) {
+      this.sceneObjectsSharedService.setSceneObjectById(
+        this.selectedId,
+        this.selectedObject!,
+      );
 
-    this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
+      this.selectedObjectPropertiesSharedService.sendPropertyChangedSignal();
+    }
   }
 
   public getX(): string {
