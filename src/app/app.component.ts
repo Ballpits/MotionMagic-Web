@@ -15,8 +15,9 @@ import { ViewportModesSharedService } from './services/viewport-modes-shared.ser
 export class AppComponent implements OnInit {
   private unsubscribe = new Subject<void>();
 
+  private jsonUrl = '../assets/test-scene.json';
   private scene!: Scene;
-  private sceneObjects!: SceneObject[];
+  private sceneObjects!: Map<number, SceneObject>;
 
   public currentMode = Mode.Construction;
 
@@ -27,12 +28,15 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const jsonUrl = '../assets/test-scene.json';
-
-    this.sceneParserService.parseSceneJson(jsonUrl).subscribe(
+    this.sceneParserService.parseSceneJson(this.jsonUrl).subscribe(
       (data) => {
         this.scene = data;
-        this.sceneObjects = this.scene.objects;
+        this.sceneObjects = new Map<number, SceneObject>(
+          Object.entries(this.scene.objects).map(([key, value]) => [
+            parseInt(key, 10),
+            value,
+          ]),
+        );
         this.sceneObjectsSharedService.setSceneObjects(this.sceneObjects);
       },
       (error) => {
@@ -44,8 +48,17 @@ export class AppComponent implements OnInit {
       .getCurrentMode$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        if (data != this.currentMode) {
+        if (data !== this.currentMode) {
           this.currentMode = data;
+        }
+      });
+
+    this.sceneObjectsSharedService
+      .getSceneObjects$()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (this.sceneObjects !== data) {
+          this.sceneObjects = data;
         }
       });
   }

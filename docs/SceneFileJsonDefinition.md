@@ -26,17 +26,17 @@
 The list containing the objects in the scene.
 
 ```
-"objects": [
-    {
+"objects": {
+    "id": {
          // Object properties
     },
-    {
+    "id": {
          // Object properties
     },
-    {
+    "id": {
          // Object properties
     },
-]
+}
 ```
 
 ### Object
@@ -54,6 +54,7 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
+    "linearVelocity": { "x": float, "y": float, "unit": string },
     "color": string,
     "border": string,
     "borderThickness": float    
@@ -73,6 +74,7 @@ The list containing the objects in the scene.
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
+    "linearVelocity": { "x": float, "y": float, "unit": string },
     "color": string,
     "border": string,
     "borderThickness": float
@@ -86,25 +88,24 @@ The list containing the objects in the scene.
     "id": int,
     "static": bool,
     "name": string,
-    "type": "polygon",
+    "type": "circle",
     "position": { "x": float, "y": float, "unit": string },
     "points": [
-        { "x": float, "y": float },
-        { "x": float, "y": float },
-        { "x": float, "y": float },
-        { "x": float, "y": float },
-        { "x": float, "y": float },
+      { "x": float, "y": float },
+      { "x": float, "y": float },
+      { "x": float, "y": float }
     ],
     "rotation": { "value": float, "unit": string },
     "mass": { "value": float, "unit": string },
     "friction": { "static": float, "kinetic": float },
+    "linearVelocity": { "x": float, "y": float, "unit": string },
     "color": string,
     "border": string,
     "borderThickness": float
 },
 ```
 
-## Example
+### Example Scene
 
 ```
 {
@@ -116,9 +117,8 @@ The list containing the objects in the scene.
     "gravity": { "x": 0, "y": -9.81, "unit": "m/s^2" },
     "time_step": 0.02
   },
-  "objects": [
-    {
-      "id": 0,
+  "objects": {
+    "0": {
       "static": false,
       "name": "Box",
       "type": "rectangle",
@@ -127,12 +127,12 @@ The list containing the objects in the scene.
       "rotation": { "value": -21, "unit": "deg" },
       "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#368BFF",
       "border": "#2776E6",
       "borderThickness": 5
     },
-    {
-      "id": 1,
+    "1": {
       "static": true,
       "name": "Ramp",
       "type": "polygon",
@@ -145,12 +145,12 @@ The list containing the objects in the scene.
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#FFFCBA",
       "border": "#D6D08B",
       "borderThickness": 5
     },
-    {
-      "id": 2,
+    "2": {
       "static": true,
       "name": "Floor",
       "type": "rectangle",
@@ -159,24 +159,25 @@ The list containing the objects in the scene.
       "rotation": { "value": 0, "unit": "deg" },
       "mass": { "value": 0, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#368BBB",
       "border": "#2878A6",
       "borderThickness": 5
     },
-    {
-      "id": 3,
+    "3": {
       "static": false,
       "name": "Ball",
       "type": "circle",
       "position": { "x": 640, "y": 0, "unit": "cm" },
       "radius": { "value": 39.13776, "unit": "cm" },
       "rotation": { "value": 0, "unit": "deg" },
-      "mass": { "value": 0, "unit": "kg" },
+      "mass": { "value": 20, "unit": "kg" },
       "friction": { "static": 0.3, "kinetic": 0.2 },
+      "linearVelocity": { "x": 0, "y": 0, "unit": "m/s" },
       "color": "#CCCCFF",
       "border": "#A6A6F7",
       "borderThickness": 5
     }
-  ]
+  }
 }
 ```

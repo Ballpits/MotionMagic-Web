@@ -1,9 +1,9 @@
 <div class="container bg1-bg has-border bg-blur unselectable">
-    <div class="menu-item text-normal font-bold">Demo Project</div>
+ <div class="menu-item text-normal font-bold">Demo Project</div>
 
     <div class="separator-vertical"></div>
 
-    <div class="menu-item text-normal" [class.active]="activeTab === 'project'" (click)="toggleDropdown('project')" (mouseenter)="openDropdown('project')">
+    <!-- <div class="menu-item text-normal" [class.active]="activeTab === 'project'" (click)="toggleDropdown('project')" (mouseenter)="openDropdown('project')">
         Project
         <div *ngIf="showDropdown['project']" class="dropdown-container bg1-bg bg-blur has-border shadow">
             <div>New</div>
@@ -57,7 +57,7 @@
         </div>
     </div>
     
-    <div class="separator-vertical"></div>
+    <div class="separator-vertical"></div> -->
     
     <div class="mode-switcher text-normal">
         <label class="radio-label">
@@ -65,10 +65,10 @@
             <span>Construction</span>
         </label>
         
-        <label class="radio-label">
+        <!-- <label class="radio-label">
             <input type="radio" name="mode" value="states" [(ngModel)]="selectedMode" (change)="onModeChange()">
             <span>States</span>
-        </label>
+        </label> -->
         
         <label class="radio-label">
             <input type="radio" name="mode" value="simulation" [(ngModel)]="selectedMode" (change)="onModeChange()">

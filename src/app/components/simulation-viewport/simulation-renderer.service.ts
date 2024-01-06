@@ -29,10 +29,9 @@ export class SimulationRendererService {
   private engine!: Matter.Engine;
   private runner = Matter.Runner.create();
 
-  private sceneObjects!: SceneObject[];
   private physicsObjects: Matter.Body[] = [];
 
-  private isSetupComplete: boolean = false;
+  private isFirstTimeSetup: boolean = true;
 
   private isRunning: boolean = false;
 
@@ -59,13 +58,11 @@ export class SimulationRendererService {
       .getSceneObjects$()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((data) => {
-        if (this.sceneObjects !== data) {
-          this.sceneObjects = data;
-        }
+        /* This is a very bad way to do initial setup, need to fix this in the future. */
+        if (this.isFirstTimeSetup) {
+          this.sceneObjectsGraphicsSetup(true);
 
-        if (!this.isSetupComplete) {
-          this.sceneObjectsGraphicsSetup();
-          this.sceneObjectsPhysicsSetup();
+          this.isFirstTimeSetup = false;
         }
       });
   }
@@ -78,19 +75,30 @@ export class SimulationRendererService {
         switch (data) {
           case Mode.Construction:
             console.log('Mode: Contstruction');
-            this.resetScene();
+
+            this.isRunning = false; // Stop the simulation.
+            this.resetGraphics();
+
             this.allowSceneObjectControl(true); // Enable controls for all scene objects.
+
             break;
 
           case Mode.States:
             console.log('Mode: States');
-            this.resetScene();
+
+            this.isRunning = false; // Stop the simulation.
+            this.resetGraphics();
+
             this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+
             break;
 
           case Mode.Simulation:
             console.log('Mode: Simulation');
+
             this.allowSceneObjectControl(false); // Disable controls for all scene objects.
+            this.resetPhysics();
+
             break;
 
           default:
@@ -133,11 +141,12 @@ export class SimulationRendererService {
     });
   }
 
-  private sceneObjectsGraphicsSetup(): void {
-    this.sceneObjects.forEach((element) => {
+  private sceneObjectsGraphicsSetup(allowControl: boolean = false): void {
+    this.sceneObjectSharedService.getSceneObjectIds().forEach((id) => {
+      let element = this.sceneObjectSharedService.getSceneObjectById(id);
       let object!: fabric.Object;
 
-      switch (element.type) {
+      switch (element!.type) {
         case ObjectType.Rectangle:
           let rectangle = element as Rectangle;
 
@@ -160,7 +169,10 @@ export class SimulationRendererService {
         case ObjectType.Polygon:
           let polygon = element as Polygon;
 
-          object = new fabric.Polygon(polygon.points, {});
+          object = new fabric.Polygon(polygon.points, {
+            lockRotation: true,
+            hasRotatingPoint: false,
+          });
 
           break;
 
@@ -169,19 +181,22 @@ export class SimulationRendererService {
       }
 
       object.set({
-        name: element.id.toString(),
+        name: id.toString(),
 
         originX: 'center',
         originY: 'center',
 
-        left: element.position.x,
-        top: element.position.y,
+        left: element!.position.x,
+        top: element!.position.y,
 
-        angle: element.rotation.value,
+        angle: element!.rotation.value,
 
-        fill: element.color,
-        stroke: element.border,
-        strokeWidth: element.borderThickness,
+        fill: element!.color,
+        stroke: element!.border,
+        strokeWidth: element!.borderThickness,
+        strokeUniform: true,
+
+        selectable: allowControl,
       });
 
       this.canvas.add(object);
@@ -189,12 +204,11 @@ export class SimulationRendererService {
   }
 
   private sceneObjectsPhysicsSetup(): void {
-    // let physicsObjects: Matter.Body[] = [];
-
-    this.sceneObjects.forEach((element) => {
+    this.sceneObjectSharedService.getSceneObjectIds().forEach((id) => {
+      let element = this.sceneObjectSharedService.getSceneObjectById(id);
       let physicsObject!: Matter.Body;
 
-      switch (element.type) {
+      switch (element!.type) {
         case ObjectType.Rectangle:
           let rectangle = element as Rectangle;
 
@@ -204,8 +218,6 @@ export class SimulationRendererService {
             rectangle.dimension.width,
             rectangle.dimension.height,
             {
-              id: rectangle.id,
-              isStatic: rectangle.static,
               angle: this.rotationConverterService.degreesToRadians(
                 rectangle.rotation.value,
               ),
@@ -222,8 +234,6 @@ export class SimulationRendererService {
             circle.position.y,
             circle.radius.value,
             {
-              id: circle.id,
-              isStatic: circle.static,
               angle: this.rotationConverterService.degreesToRadians(
                 circle.rotation.value,
               ),
@@ -246,16 +256,24 @@ export class SimulationRendererService {
             polygon.position.x + offsetX,
             polygon.position.y + offsetY,
             [polygon.points],
-            {
-              id: polygon.id,
-              isStatic: polygon.static,
-            },
+            {},
           );
           break;
 
         default:
           break;
       }
+
+      physicsObject.id = id;
+      physicsObject.isStatic = element!.static;
+      physicsObject.mass = element!.mass.value;
+      physicsObject.frictionStatic = element!.friction.static;
+      physicsObject.friction = element!.friction.kinetic;
+
+      Matter.Body.setVelocity(physicsObject, {
+        x: element!.linearVelocity.x,
+        y: element!.linearVelocity.y,
+      });
 
       this.physicsObjects.push(physicsObject);
     });
@@ -278,16 +296,23 @@ export class SimulationRendererService {
     return { x: centerX, y: centerY };
   }
 
-  private resetScene(): void {
-    this.isRunning = false; // Stop the simulation.
-
+  private resetGraphics(): void {
     this.canvas.clear(); // Clear the viewport.
+    this.sceneObjectsGraphicsSetup();
+  }
+
+  private resetPhysics(): void {
     Matter.World.remove(this.engine.world, this.physicsObjects); // Remove all physics objects fron the world.
     this.physicsObjects = []; // Clear the physics object list.
 
-    /* Setup the scene. */
-    this.sceneObjectsGraphicsSetup();
     this.sceneObjectsPhysicsSetup();
+  }
+
+  private resetScene(): void {
+    this.isRunning = false; // Stop the simulation.
+
+    this.resetGraphics();
+    this.resetPhysics();
   }
 
   private renderLoop() {
@@ -323,18 +348,18 @@ export class SimulationRendererService {
         });
       } else {
         let points = (
-          this.sceneObjects.find((obj) => obj.id === body.id) as Polygon
+          this.sceneObjectSharedService.getSceneObjectById(body.id) as Polygon
         ).points;
-
+        let shapeCenter = this.calculateBoundingBoxCenter(points);
         let centerOfMass = Matter.Vertices.centre(points);
 
+        // Calculate the offset to align the center of mass with the bounding box center.
+        let offsetX = centerOfMass.x - shapeCenter.x;
+        let offsetY = centerOfMass.y - shapeCenter.y;
+
         currentObject!.set({
-          left:
-            body.position.x -
-            (centerOfMass.x - (body.bounds.max.x - body.bounds.min.x) / 2),
-          top:
-            body.position.y -
-            (centerOfMass.y - (body.bounds.max.y - body.bounds.min.y) / 2),
+          left: body.position.x - offsetX,
+          top: body.position.y - offsetY,
           angle: this.rotationConverterService.radiansToDegrees(body.angle),
         });
       }

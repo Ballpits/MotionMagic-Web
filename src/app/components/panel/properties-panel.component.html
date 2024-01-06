@@ -1,116 +1,146 @@
 <base-panel [title]="'Object Properties'">
 
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="panel-sub-section">
-            <div class="section-title-text text-large font-bold">Position</div>
+<div class="panel-section">
+    <div class="panel-sub-section">
+        <div class="section-title-text text-large font-bold">Position</div>
+    </div>
+    
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text-XY text-normal">X:</div>
+            
+            <textbox-up-down [value]="getX()" (valueChanged)="setX($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="inch">inch</option>
+                <option value="mile">mile</option>
+            </dropdown>        
         </div>
-        
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text-XY text-normal">X:</div>
-                
-                <textbox-up-down [value]="selectedObject.left || 0" (valueChanged)="updateLeft($event)"></textbox-up-down>
-                
-                <dropdown>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                    <option value="inch">inch</option>
-                    <option value="mile">mile</option>
-                </dropdown>        
-            </div>
-        </div>
-        
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text-XY text-normal">Y:</div>
-                
-                <textbox-up-down [value]="selectedObject.top || 0" (valueChanged)="updateTop($event)"></textbox-up-down>
-                
-                <dropdown>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                    <option value="inch">inch</option>
-                    <option value="mile">mile</option>
-                </dropdown>        
-            </div>
+    </div>
+    
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text-XY text-normal">Y:</div>
+            
+            <textbox-up-down [value]="getY()" (valueChanged)="setY($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="inch">inch</option>
+                <option value="mile">mile</option>
+            </dropdown>        
         </div>
     </div>
 </div>
 
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="panel-sub-section">
-            <div class="section-title-text text-large font-bold">Dimensions</div>
+<div *ngIf="getObjectType() === 'rectangle'" class="panel-section">
+    <div class="panel-sub-section">
+        <div class="section-title-text text-large font-bold">Dimensions</div>
+    </div>
+    
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Width:</div>
+            
+            <textbox-up-down [value]="getWidth()" (valueChanged)="setWidth($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="inch">inch</option>
+                <option value="mile">mile</option>
+            </dropdown>        
         </div>
-        
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text text-normal">Width:</div>
-                
-                <textbox-up-down [value]="selectedObject.width || 20" (valueChanged)="updateWidth($event)"></textbox-up-down>
-                
-                <dropdown>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                    <option value="inch">inch</option>
-                    <option value="mile">mile</option>
-                </dropdown>        
-            </div>
-        </div>
-        
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text text-normal">Height:</div>
-                
-                <textbox-up-down [value]="selectedObject.height || 20" (valueChanged)="updateHeight($event)"></textbox-up-down>
-                
-                <dropdown>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                    <option value="inch">inch</option>
-                    <option value="mile">mile</option>
-                </dropdown>        
-            </div>
+    </div>
+    
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Height:</div>
+            
+            <textbox-up-down [value]="getHeight()" (valueChanged)="setHeight($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="km">km</option>
+                <option value="inch">inch</option>
+                <option value="mile">mile</option>
+            </dropdown>        
         </div>
     </div>
 </div>
 
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text text-normal">Rotation:</div>
-                
-                <textbox-up-down [value]="selectedObject.angle || 0" (valueChanged)="updateRotation($event)"></textbox-up-down>
-                
-                <dropdown>
-                    <option value="deg">°</option>
-                    <option value="radient">rad</option>
-                </dropdown>        
-            </div>
+<div *ngIf="getObjectType() === 'circle'" class="panel-section">
+    <div class="horizontal-stack-layout">
+        <div class="property-text text-normal">Radius:</div>
+        
+        <textbox-up-down [value]="getRadius()" (valueChanged)="setRadius($event)"></textbox-up-down>
+        
+        <dropdown>
+            <option value="cm">cm</option>
+            <option value="m">m</option>
+            <option value="km">km</option>
+            <option value="inch">inch</option>
+            <option value="mile">mile</option>
+        </dropdown>        
+    </div>
+</div>
+
+<div *ngIf="getObjectType() !== 'polygon'" class="panel-section">
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Rotation:</div>
+            
+            <textbox-up-down [value]="getRotation()" (valueChanged)="setRotation($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="deg">°</option>
+                <option value="radient">rad</option>
+            </dropdown>        
         </div>
     </div>
 </div>
 
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="panel-sub-section">
-            <div class="horizontal-stack-layout">
-                <div class="property-text text-normal">Mass:</div>
-                
-                <textbox-up-down></textbox-up-down>
-                
-                <dropdown>
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                    <option value="lb">lb</option>
-                </dropdown>        
-            </div>
+<div class="panel-section">
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Mass:</div>
+            
+            <textbox-up-down [value]="getMass()" (valueChanged)="setMass($event)"></textbox-up-down>
+            
+            <dropdown>
+                <option value="g">g</option>
+                <option value="kg">kg</option>
+                <option value="lb">lb</option>
+            </dropdown>        
+        </div>
+    </div>
+</div>
+
+<div class="panel-section">
+    <div class="panel-sub-section">
+        <div class="section-title-text text-large font-bold">Friction</div>
+    </div>
+    
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Static:</div>
+            
+            <textbox-up-down [value]="getStaticFriction()" (valueChanged)="setStaticFriction($event)"></textbox-up-down>
+        </div>
+    </div>
+    
+    <div class="panel-sub-section">
+        <div class="horizontal-stack-layout">
+            <div class="property-text text-normal">Kinetic:</div>
+            
+            <textbox-up-down [value]="getKineticFriction()" (valueChanged)="setKineticFriction($event)"></textbox-up-down>
         </div>
     </div>
 </div>
@@ -124,7 +154,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text-XY text-normal">X:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getLinearVelocityX()" (valueChanged)="setLinearVelocityX($event)"></textbox-up-down>
             
             <dropdown>
                 <option value="ms">m/s</option>
@@ -138,7 +168,7 @@
         <div class="horizontal-stack-layout">
             <div class="property-text-XY text-normal">Y:</div>
             
-            <textbox-up-down></textbox-up-down>
+            <textbox-up-down [value]="getLinearVelocityY()" (valueChanged)="setLinearVelocityY($event)"></textbox-up-down>
             
             <dropdown>
                 <option value="ms">m/s</option>
@@ -153,11 +183,9 @@
     <div class="separator-horizontal"></div>
 </div>
 
-<div class="panel-section-container">
-    <div class="panel-section">
-        <div class="horizontal-stack-layout">
-            <div class="property-text text-normal">Appreance properties goes here...</div>
-        </div>
+<div class="panel-section">
+    <div class="horizontal-stack-layout">
+        <div class="property-text text-normal">Appreance properties goes here...</div>
     </div>
 </div>
 
